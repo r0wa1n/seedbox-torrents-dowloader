@@ -1,0 +1,8 @@
+body { padding-top: 50px; }
+#main-information tr td:last-child { padding-left: 15px; }
+#footer { text-align: right; color: #777777; font-size: .8em; }
+.italic { font-style:italic }
+.progress { border: 1px solid #000000; }
+@media screen and (max-width: 768px) {
+    body { padding-top: 0px; }
+}
