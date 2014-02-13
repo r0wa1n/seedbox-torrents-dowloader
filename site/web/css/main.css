@@ -2,7 +2,10 @@ body { padding-top: 50px; }
 #main-information tr td:last-child { padding-left: 15px; }
 #footer { text-align: right; color: #777777; font-size: .8em; }
 .italic { font-style:italic }
-.progress { border: 1px solid #000000; }
+.progress { border: 1px solid #000000; margin-bottom: 0; height: 34px; position: relative; background-image: none; background-color: #8D8D8D; }
+.progress span { position: absolute; text-align: center; width: 100%; left: 0; color: #ffffff; line-height: 28px; font-size: 14px; }
+#progress-disk-size { height: 24px; width: 180px; margin: 5px 0;}
+#progress-disk-size span { line-height: 24px;}
 @media screen and (max-width: 768px) {
-    body { padding-top: 0px; }
+    body { padding-top: 0; }
 }

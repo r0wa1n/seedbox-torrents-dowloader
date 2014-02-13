@@ -37,15 +37,27 @@
         <div class="pull-left">
             <table id="main-information">
                 <tr>
-                    <td>Last update :</td>
+                    <td>Last update</td>
                     <td><span class="badge"><?php echo date(DATE_PATTERN, file_get_contents('../src/last-update')); ?></span></td>
                 </tr>
                 <tr>
-                    <td>Space size left :</td>
-                    <td><span class="badge"><?php echo shell_exec('df -h '.ROOT_SERVER_DIRECTORY.' | awk \'NR==2{print$4}\'') ?></span></td>
+                    <td>Space size left</td>
+                    <?php
+                        $sizeTotal = shell_exec('df '.ROOT_SERVER_DIRECTORY.' | awk \'NR==2{print$2}\'') * 512;
+                        $sizeUsed = shell_exec('df '.ROOT_SERVER_DIRECTORY.' | awk \'NR==2{print$3}\'') * 512;
+                        $percent = 100 * $sizeUsed / $sizeTotal;
+                        $sizeLeft = $sizeTotal - $sizeUsed;
+
+                    echo '<td>
+                            <div class="progress" id="progress-disk-size">
+                              <div class="progress-bar" role="progressbar" aria-valuenow="' . $sizeUsed . '" aria-valuemin="0" aria-valuemax="' . $sizeAvailable . '" style="width: ' . $percent . '%;"></div>
+                              <span>&nbsp;' . octetsToSize($sizeLeft) . ' / ' . octetsToSize($sizeTotal) . '&nbsp;</span>
+                            </div>
+                         </td>';
+                    ?>
                 </tr>
                 <tr>
-                    <td>Total torrents :</td>
+                    <td>Total torrents</td>
                     <td><span class="badge"><?php echo shell_exec('ls -1 '.FILES_SERVER_DIRECTORY.' | wc -l') ?></span></td>
                 </tr>
             </table>

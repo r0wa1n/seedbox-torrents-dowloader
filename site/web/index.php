@@ -28,7 +28,7 @@ include('../src/header.php');
                 $downloaded = shell_exec('find ' . DOWNLOAD_DIRECTORY . ' -name "' . $entry . '" | wc -l') >= 1;
     ?>
     <tr <?php if($downloaded) { echo 'class="success"'; } ?>>
-        <td style="word-break: break-all; line-height: 34px;"><?php if($downloaded) { echo '<span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;'; } echo $entry . ' (<span class="italic">' . octetsToSize($sizeEntry) . '</span>)'; ?></td>
+        <td style="word-break: break-all; line-height: 34px;"><?php if($downloaded) { echo '<span class="glyphicon glyphicon-ok"></span>&nbsp;'; } echo $entry . ' (<span class="italic">' . octetsToSize($sizeEntry) . '</span>)'; ?></td>
         <td>
             <?php
                 // 3 cases
@@ -36,17 +36,19 @@ include('../src/header.php');
                 // file exists, and still not start downloading
                 // file exists, and currently downloading
                 if(file_exists(FILES_TO_DOWNLOAD_SERVER_DIRECTORY . $entry)) {
-                    echo '<div class="progress progress-striped active" style="height: 34px;line-height: 34px;margin-bottom: 0;">';
+                    echo '<div class="progress progress-striped active">';
                     if(file_exists(FILES_TO_DOWNLOAD_SERVER_DIRECTORY . SEEDBOX_NAME . '/' . $entry)) {
                         $size = shell_exec('du -s '. FILES_TO_DOWNLOAD_SERVER_DIRECTORY . SEEDBOX_NAME .'/' . $entry . ' | awk \'{print$1}\'') * 512;
                         $percentNow = 100 * $size / $sizeEntry;
-                        echo '<div class="progress-bar" role="progressbar" aria-valuenow="' . $size . '" aria-valuemin="0" aria-valuemax="' . $sizeEntry . '" style="width: ' . $percentNow . '%"><span class="glyphicon glyphicon-transfer"></span>&nbsp;&nbsp;<span>' . octetsToSize($size) . '</span></div>';
+                        echo '<div class="progress-bar" role="progressbar" aria-valuenow="' . $size . '" aria-valuemin="0" aria-valuemax="' . $sizeEntry . '" style="width: ' . $percentNow . '%"><span class="glyphicon glyphicon-transfer">&nbsp;' . octetsToSize($size) . '</span></div>';
                     } else {
-                        echo '<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"><span class="glyphicon glyphicon-import"></span>&nbsp;&nbsp;<span>Pending...</span></div>';
+                        echo '<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"><span class="glyphicon glyphicon-import">&nbsp;Pending...</span></div>';
                     }
                     echo '</div>';
+                } else if($downloaded) {
+                    echo '<a class="btn btn-small btn-success disabled"><span class="glyphicon glyphicon-save">&nbsp;Download</span></a>';
                 } else {
-                    echo '<a class="btn btn-small btn-success" href="download.php?file=' . urlencode($entry) . '"><span class="glyphicon glyphicon-save"></span>&nbsp;&nbsp;Download</a>';
+                    echo '<a class="btn btn-small btn-success" href="download.php?file=' . urlencode($entry) . '"><span class="glyphicon glyphicon-save">&nbsp;Download</span></a>';
                 }
             ?>
 
