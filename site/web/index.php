@@ -40,15 +40,15 @@ include('../src/header.php');
                     if(file_exists(FILES_TO_DOWNLOAD_SERVER_DIRECTORY . SEEDBOX_NAME . '/' . $entry)) {
                         $size = shell_exec('du -s '. FILES_TO_DOWNLOAD_SERVER_DIRECTORY . SEEDBOX_NAME .'/' . $entry . ' | awk \'{print$1}\'') * 512;
                         $percentNow = 100 * $size / $sizeEntry;
-                        echo '<div class="progress-bar" role="progressbar" aria-valuenow="' . $size . '" aria-valuemin="0" aria-valuemax="' . $sizeEntry . '" style="width: ' . $percentNow . '%"><span class="glyphicon glyphicon-transfer">&nbsp;' . octetsToSize($size) . '</span></div>';
+                        echo '<div class="progress-bar downloading" role="progressbar" aria-valuenow="' . $size . '" aria-valuemin="0" aria-valuemax="' . $sizeEntry . '" style="width: ' . $percentNow . '%" file="' . urlencode($entry) . '"><span class="glyphicon glyphicon-transfer">&nbsp;' . octetsToSize($size) . '</span></div>';
                     } else {
                         echo '<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"><span class="glyphicon glyphicon-import">&nbsp;Pending...</span></div>';
                     }
                     echo '</div>';
                 } else if($downloaded) {
-                    echo '<a class="btn btn-small btn-success disabled"><span class="glyphicon glyphicon-save">&nbsp;Download</span></a>';
+                    echo '<button type="button" class="btn btn-small btn-success disabled"><span class="glyphicon glyphicon-save">&nbsp;Download</span></button>';
                 } else {
-                    echo '<a class="btn btn-small btn-success" href="download.php?file=' . urlencode($entry) . '"><span class="glyphicon glyphicon-save">&nbsp;Download</span></a>';
+                    echo '<button type="button" class="download btn btn-small btn-success" file="' . urlencode($entry) . '"><span class="glyphicon glyphicon-save">&nbsp;Download</span></button>';
                 }
             ?>
 

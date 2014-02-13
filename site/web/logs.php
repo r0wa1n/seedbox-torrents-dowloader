@@ -1,5 +1,6 @@
 <?php
     include('../src/constants.php');
+    include('../src/utils.php');
 
     $currentPage = 'LOGS';
     include('../src/header.php');

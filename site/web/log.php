@@ -1,5 +1,6 @@
 <?php
 include('../src/constants.php');
+include('../src/utils.php');
 
 $file = $_GET['file'];
 

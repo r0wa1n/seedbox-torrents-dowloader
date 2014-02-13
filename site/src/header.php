@@ -50,7 +50,7 @@
 
                     echo '<td>
                             <div class="progress" id="progress-disk-size">
-                              <div class="progress-bar" role="progressbar" aria-valuenow="' . $sizeUsed . '" aria-valuemin="0" aria-valuemax="' . $sizeAvailable . '" style="width: ' . $percent . '%;"></div>
+                              <div class="progress-bar" role="progressbar" aria-valuenow="' . $sizeUsed . '" aria-valuemin="0" aria-valuemax="' . $sizeTotal . '" style="width: ' . $percent . '%;"></div>
                               <span>&nbsp;' . octetsToSize($sizeLeft) . ' / ' . octetsToSize($sizeTotal) . '&nbsp;</span>
                             </div>
                          </td>';
