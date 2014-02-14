@@ -56,12 +56,8 @@
                          </td>';
                     ?>
                 </tr>
-                <tr>
-                    <td>Total torrents</td>
-                    <td><span class="badge"><?php echo shell_exec('ls -1 '.FILES_SERVER_DIRECTORY.' | wc -l') ?></span></td>
-                </tr>
             </table>
         </div>
-        <div class="pull-right"><a class="btn btn-small btn-info" href="update.php" style="color: white;"><span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;Update</a></div>
+        <div class="pull-right"><button type="button" class="btn btn-small btn-info" id="update" style="color: white;"><span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;Update</button></div>
     </div>
 </div>
