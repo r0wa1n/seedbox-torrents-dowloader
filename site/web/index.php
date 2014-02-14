@@ -5,6 +5,7 @@ include('../src/utils.php');
 $currentPage = 'HOME';
 include('../src/header.php');
 ?>
+<div id="notifications"></div>
 <table class="table table-striped">
     <tr>
         <th>Torrent name</th>

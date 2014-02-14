@@ -12,9 +12,9 @@ if (empty($file)) {
     foreach($filesDetails as $fileDetail) {
         if($fileDetail['file'] == $decodedFile) {
             $data = array(
-                'h' => octetsToSize($size),
-                's' => $size,
-                't' => $fileDetail['size'] * 1024
+                'h' => octetsToSize($size),       // Human Readable size
+                's' => $size,                     // current size
+                't' => $fileDetail['size'] * 1024 // Total file size
             );
             echo json_encode($data);
         }

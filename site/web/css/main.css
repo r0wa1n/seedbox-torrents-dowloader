@@ -23,6 +23,14 @@ div#loading span {
     font-size: 2.2em;
     color: white;
 }
+div#notifications div.alert {
+    margin: 10px;
+}
+div#notifications div.alert span.glyphicon-remove {
+    cursor: pointer;
+    float: right;
+    line-height: 16px;
+}
 div#loading img {
     display: block;
     margin: 0 auto;
