@@ -10,4 +10,5 @@ const LOGS_DIRECTORY = '../logs/';
 const DOWNLOAD_DIRECTORY = '../download/';
 const SEEDBOX_NAME = 'XXX.seedbox.fr';
 
-const FILES_DETAILS_MIRROR_SEEDBOX = '../temp/seedbox_mirror_files_detail.json';
+const TEMP_DIR = '../temp/';
+const FILES_DETAILS_MIRROR_SEEDBOX = 'seedbox_mirror_files_detail.json';

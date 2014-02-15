@@ -6,11 +6,6 @@ if (empty($file)) {
 } else {
     include('../src/constants.php');
     $file = urldecode($file);
-//    if (!file_exists(FILES_TO_DOWNLOAD_SERVER_DIRECTORY . $file)) {
-        // Start download
-//        shell_exec('nohup TODO &');
-//        if(!touch(FILES_TO_DOWNLOAD_SERVER_DIRECTORY . $file)) {
-//            echo 'Unable to create file ' . $file;
-//        }
-//    }
+    // Start download
+    shell_exec('../../scripts/download-files-server.sh "' . $file . '" > /dev/null 2>/dev/null &');
 }
