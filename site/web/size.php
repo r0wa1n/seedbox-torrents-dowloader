@@ -1,12 +1,16 @@
 <?php
 $file = $_GET['file'];
+$file = urldecode($file);
 
 include('../src/constants.php');
 include('../src/utils.php');
 if (empty($file)) {
     http_response_code(400);
 } else if (!file_exists(TEMP_DIR . SEEDBOX_NAME . '/' . $file)) {
-    // Do nothing
+    // Check if file is not in download dir
+    if(file_exists(DOWNLOAD_DIRECTORY . $file)) {
+        echo '-1';
+    }
 } else {
     $decodedFile = urldecode($file);
     $size = shell_exec('du -sk ' . TEMP_DIR . SEEDBOX_NAME . '/' . $decodedFile . ' | awk \'{print$1}\'') * 1024;

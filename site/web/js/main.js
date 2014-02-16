@@ -46,12 +46,23 @@ function updateDownloadedFiles() {
             url: 'size.php',
             data: { file: progressBar.attr('file') },
             success: function (data) {
-                data = JSON.parse(data);
-                progressBar.attr('aria-valuenow', data.s);
-                var percent = 100 * data.s / data.t;
-                progressBar.css('width', percent + '%');
-                progressBar.find('span').html('&nbsp;' + data.h);
-                // TODO verify if file is not compeleted, if it's the case, change CSS
+                if (data != '' && data != '-1') {
+                    data = JSON.parse(data);
+                    progressBar.attr('aria-valuenow', data.s);
+                    var percent = 100 * data.s / data.t;
+                    progressBar.css('width', percent + '%');
+                    progressBar.find('span').html('&nbsp;' + data.h);
+                } else if (data == '-1') {
+                    // if it's equal to -1 it means file is present in download dir
+                    var file = progressBar.attr('file');
+                    var tr = progressBar.closest('tr');
+                    tr.addClass('success');
+                    tr.find('td:first-child').prepend('<span class="glyphicon glyphicon-ok"></span>&nbsp;');
+                    tr.find('td:last-child').empty();
+                    tr.find('td:last-child').append('<button type="button" class="btn btn-small btn-success disabled"><span class="glyphicon glyphicon-save">&nbsp;Download</span></button>');
+                    // notify user that the download is complete
+                    addNotification(file + ' just complete.', 'alert-success');
+                }
             }
         });
     });
@@ -63,8 +74,7 @@ function updateDownloadedFiles() {
             url: 'size.php',
             data: { file: progressBar.attr('file') },
             success: function (data) {
-                console.log(data);
-                if (data != '') {
+                if (data != '' && data != '-1') {
                     data = JSON.parse(data);
                     progressBar.removeClass('pending');
                     progressBar.addClass('downloading');
@@ -75,6 +85,16 @@ function updateDownloadedFiles() {
                     progressBar.find('span').html('&nbsp;' + data.h);
                     // notify user that the download starts
                     addNotification(progressBar.attr('file') + ' just starts.', 'alert-info');
+                } else if(data == '-1') {
+                    // if it's equal to -1 it means file is present in download dir
+                    var file = progressBar.attr('file');
+                    var tr = progressBar.closest('tr');
+                    tr.addClass('success');
+                    tr.find('td:first-child').prepend('<span class="glyphicon glyphicon-ok"></span>&nbsp;');
+                    tr.find('td:last-child').empty();
+                    tr.find('td:last-child').append('<button type="button" class="btn btn-small btn-success disabled"><span class="glyphicon glyphicon-save">&nbsp;Download</span></button>');
+                    // notify user that the download is complete
+                    addNotification(file + ' just complete.', 'alert-success');
                 }
             }
         });
@@ -91,8 +111,8 @@ function addNotification(text, classAlert) {
         class: 'glyphicon glyphicon-remove'
     });
     div.append(close);
-    close.click(function() {
-        div.slideUp('slow', function() {
+    close.click(function () {
+        div.slideUp('slow', function () {
             div.remove();
         });
     });
