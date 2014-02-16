@@ -28,7 +28,7 @@ foreach ($filesDetails as $fileDetail) {
             'downloaded' => $downloaded,
             'size' => $fileSize,
             'name' => $fileDetail['file'],
-            'encodedName' => urlencode($fileDetail['size'])
+            'encodedName' => urlencode($fileDetail['file'])
         );
     }
 }
