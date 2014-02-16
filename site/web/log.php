@@ -1,6 +1,7 @@
 <?php
-include('../src/constants.php');
-include('../src/utils.php');
+require_once('../libs/Smarty.class.php');
+require_once('../src/constants.php');
+require_once('../src/utils.php');
 
 $file = $_GET['file'];
 
@@ -8,9 +9,9 @@ if (empty($file) || !file_exists(LOGS_DIRECTORY . $file)) {
     header('Location: logs.php');
 }
 
-$currentPage = 'LOGS';
-include('../src/header.php');
+$smarty = new Smarty();
+initSmarty($smarty, 'LOGS');
 
-echo '<pre>' . file_get_contents(LOGS_DIRECTORY . $file) . '</pre>';
+$smarty->assign('logDetails', file_get_contents(LOGS_DIRECTORY . $file));
 
-include('../src/footer.php');
+$smarty->display('log.tpl');

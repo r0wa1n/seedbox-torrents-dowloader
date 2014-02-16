@@ -1,36 +1,30 @@
 <?php
-    include('../src/constants.php');
-    include('../src/utils.php');
+require_once('../libs/Smarty.class.php');
+require_once('../src/constants.php');
+require_once('../src/utils.php');
 
-    $currentPage = 'LOGS';
-    include('../src/header.php');
-?>
-<table class="table table-striped">
-    <tr>
-        <th>Description</th>
-        <th style="width: 100px;"></th>
-    </tr>
-    <?php
-        if ($handle = opendir(LOGS_DIRECTORY)) {
-            $files = array();
-            while (false !== ($entry = readdir($handle))) {
-                if($entry != '.' && $entry != '..') {
-                    $files[] = $entry;
-                }
-            }
-            closedir($handle);
+$smarty = new Smarty();
+initSmarty($smarty, 'LOGS');
 
-            // Sort files
-            arsort($files);
-            foreach($files as $entry) {
-    ?>
-    <tr>
-        <td><?php echo $entry; ?></td>
-        <td><a class="btn btn-small btn-success" href="log.php?file=<?php echo urlencode($entry); ?>" style="color: white;"><span class="glyphicon glyphicon-search"></span>&nbsp;&nbsp;Details</a></td>
-    </tr>
-    <?php
-            }
+if ($handle = opendir(LOGS_DIRECTORY)) {
+    $files = array();
+    while (false !== ($entry = readdir($handle))) {
+        if ($entry != '.' && $entry != '..') {
+            $files[] = $entry;
         }
-    ?>
-</table>
-<?php include('../src/footer.php'); ?>
+    }
+    closedir($handle);
+
+    // Sort files
+    arsort($files);
+    $logFiles = array();
+    foreach($files as $file) {
+        $logFiles[] = array(
+            'name' => $file,
+            'encodedName' => urlencode($file)
+        );
+    }
+    $smarty->assign('files', $logFiles);
+}
+
+$smarty->display('logs.tpl');

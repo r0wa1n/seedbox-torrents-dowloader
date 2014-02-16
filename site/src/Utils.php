@@ -1,4 +1,39 @@
 <?php
+require_once('../src/constants.php');
+
+/**
+ * Function which initialise smarty with header and footer information
+ *
+ * @param $smarty
+ * @param $currentPage
+ */
+function initSmarty($smarty, $currentPage)
+{
+    /* DISK SIZE INFO */
+    $sizeTotal = shell_exec('df ' . ROOT_SERVER_DIRECTORY . ' | awk \'NR==2{print$2}\'') * 512;
+    $sizeUsed = shell_exec('df ' . ROOT_SERVER_DIRECTORY . ' | awk \'NR==2{print$3}\'') * 512;
+    $percent = 100 * $sizeUsed / $sizeTotal;
+    $sizeLeft = $sizeTotal - $sizeUsed;
+
+    $header = array(
+        'title' => WEBSITE_TITLE,
+        'currentPage' => $currentPage,
+        'lastUpdate' => date(DATE_PATTERN, file_get_contents('../src/last-update')),
+        'diskInfo' => array(
+            'totalSize' => $sizeTotal,
+            'totalSizeUsed' => $sizeUsed,
+            'totalPercentSizeUsed' => $percent,
+            'totalSizeLeft' => $sizeLeft
+        )
+    );
+
+    $footer = array(
+        'title' => sprintf(WEBSITE_FOOTER, date('Y'))
+    );
+
+    $smarty->assign('header', $header);
+    $smarty->assign('footer', $footer);
+}
 
 /**
  * Convert bytes to human readable format
