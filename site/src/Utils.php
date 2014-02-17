@@ -7,31 +7,35 @@ require_once('../src/constants.php');
  * @param $smarty
  * @param $currentPage
  */
-function initSmarty($smarty, $currentPage)
+function initSmarty($smarty, $currentPage, $diskInfo = true)
 {
-    /* DISK SIZE INFO */
-    $sizeTotal = shell_exec('df ' . ROOT_SERVER_DIRECTORY . ' | awk \'NR==2{print$2}\'') * 512;
-    $sizeUsed = shell_exec('df ' . ROOT_SERVER_DIRECTORY . ' | awk \'NR==2{print$3}\'') * 512;
-    $percent = 100 * $sizeUsed / $sizeTotal;
-    $sizeLeft = $sizeTotal - $sizeUsed;
-
     $header = array(
         'title' => WEBSITE_TITLE,
-        'currentPage' => $currentPage,
-        'lastUpdate' => date(DATE_PATTERN, file_get_contents('../src/last-update')),
-        'diskInfo' => array(
+        'currentPage' => $currentPage
+    );
+
+    if($diskInfo) {
+        /* DISK SIZE INFO */
+        $sizeTotal = shell_exec('df ' . ROOT_SERVER_DIRECTORY . ' | awk \'NR==2{print$2}\'') * 512;
+        $sizeUsed = shell_exec('df ' . ROOT_SERVER_DIRECTORY . ' | awk \'NR==2{print$3}\'') * 512;
+        $percent = 100 * $sizeUsed / $sizeTotal;
+        $sizeLeft = $sizeTotal - $sizeUsed;
+
+        $header['lastUpdate'] = date(DATE_PATTERN, file_get_contents('../src/last-update'));
+        $header['diskInfo'] = array(
             'totalSize' => $sizeTotal,
             'totalSizeUsed' => $sizeUsed,
             'totalPercentSizeUsed' => $percent,
             'totalSizeLeft' => $sizeLeft
-        )
-    );
+        );
+    }
+
+    $smarty->assign('header', $header);
 
     $footer = array(
         'title' => sprintf(WEBSITE_FOOTER, date('Y'))
     );
 
-    $smarty->assign('header', $header);
     $smarty->assign('footer', $footer);
 }
 

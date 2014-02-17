@@ -6,6 +6,9 @@ body { padding-top: 50px; }
 .progress span { position: absolute; text-align: center; width: 100%; left: 0; color: #ffffff; line-height: 28px; font-size: 14px; }
 #progress-disk-size { height: 24px; width: 180px; margin: 5px 0;}
 #progress-disk-size span { line-height: 24px;}
+div.content {
+    padding: 10px;
+}
 div#loading {
     position: absolute;
     top: 0;

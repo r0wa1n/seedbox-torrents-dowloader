@@ -28,11 +28,13 @@
             <ul class="nav navbar-nav">
                 <li class="{if $header.currentPage eq 'HOME'}active{/if}"><a href="index.php">Home</a></li>
                 <li class="{if $header.currentPage eq 'LOGS'}active{/if}"><a href="logs.php">Logs</a></li>
+                <li class="{if $header.currentPage eq 'SETTINGS'}active{/if}"><a href="settings.php"><span class="glyphicon glyphicon-cog"></span></a></li>
             </ul>
         </div>
     </div>
 </nav>
 
+{if isset($header.lastUpdate) and isset($header.diskInfo)}
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="pull-left">
@@ -64,7 +66,7 @@
         </div>
     </div>
 </div>
-
+{/if}
 
 {block name=content}{/block}
 
