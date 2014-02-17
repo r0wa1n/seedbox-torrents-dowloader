@@ -41,7 +41,7 @@
 </nav>
 
 {if isset($header.lastUpdate) and isset($header.diskInfo)}
-<div class="panel panel-default">
+<div class="panel panel-default" {if not $header.isSeedboxInitialized and $header.currentPage ne 'SETTINGS'}style="margin-top: 20px;"{/if}>
     <div class="panel-body">
         <div class="pull-left">
             <table id="main-information">
