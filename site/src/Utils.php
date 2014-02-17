@@ -6,15 +6,17 @@ require_once('../src/constants.php');
  *
  * @param $smarty
  * @param $currentPage
+ * @param $diskInfo
  */
 function initSmarty($smarty, $currentPage, $diskInfo = true)
 {
     $header = array(
         'title' => WEBSITE_TITLE,
-        'currentPage' => $currentPage
+        'currentPage' => $currentPage,
+        'isSeedboxInitialized' => isSeedboxInitialized()
     );
 
-    if($diskInfo) {
+    if ($diskInfo) {
         /* DISK SIZE INFO */
         $sizeTotal = shell_exec('df ' . ROOT_SERVER_DIRECTORY . ' | awk \'NR==2{print$2}\'') * 512;
         $sizeUsed = shell_exec('df ' . ROOT_SERVER_DIRECTORY . ' | awk \'NR==2{print$3}\'') * 512;
@@ -37,6 +39,21 @@ function initSmarty($smarty, $currentPage, $diskInfo = true)
     );
 
     $smarty->assign('footer', $footer);
+}
+
+/**
+ * Function return true if seedbox information have been set
+ */
+function isSeedboxInitialized()
+{
+    if (file_exists(TEMP_DIR . SEEDBOX_DETAILS_FILE)) {
+        $seedboxFileDetails = json_decode(file_get_contents(TEMP_DIR . SEEDBOX_DETAILS_FILE), true);
+
+        return !(empty($seedboxFileDetails['seedboxHost']) || empty($seedboxFileDetails['seedboxUsername'])
+            || empty($seedboxFileDetails['seedboxPassword']));
+    } else {
+        return false;
+    }
 }
 
 /**

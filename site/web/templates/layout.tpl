@@ -6,6 +6,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
     <link href="css/bootstrap-theme.min.css" rel="stylesheet" media="screen">
+    <link href="css/docs.min.css" rel="stylesheet" media="screen">
     <link href="css/main.css" rel="stylesheet" media="screen">
 </head>
 <body>
@@ -32,6 +33,11 @@
             </ul>
         </div>
     </div>
+    {if not $header.isSeedboxInitialized and $header.currentPage ne 'SETTINGS'}
+        <div class="container-fluid warning">
+            Your seedbox information has not been set. Go to settings to set them. <a href="settings.php"><span class="glyphicon glyphicon-cog"></span></a>
+        </div>
+    {/if}
 </nav>
 
 {if isset($header.lastUpdate) and isset($header.diskInfo)}

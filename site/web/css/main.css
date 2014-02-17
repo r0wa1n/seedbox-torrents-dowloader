@@ -9,6 +9,15 @@ body { padding-top: 50px; }
 div.content {
     padding: 10px;
 }
+.navbar div.warning {
+    background-color: #fcf8e3;
+    padding: 3px 10px;
+    text-align: center;
+}
+.bs-callout {
+    padding: 8px;
+    margin: 5px 0 15px 0;
+}
 div#loading {
     position: absolute;
     top: 0;
