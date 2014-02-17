@@ -18,8 +18,10 @@ $(document).ready(function () {
     // Link update button
     $('#update').click(function () {
         // display loading screen
-        $('div#loading').show();
-        $('div#loading').animate({opacity: '0.6'}, 500, function () {
+        var loading = $('div#loading');
+        loading.css('height', $(document).height());
+        loading.show();
+        loading.animate({opacity: '0.6'}, 500, function () {
             $.ajax({
                 type: 'GET',
                 url: 'update.php',

@@ -66,7 +66,7 @@
             </table>
         </div>
         <div class="pull-right">
-            <button type="button" class="btn btn-small btn-info" id="update" style="color: white;"><span
+            <button type="button" class="btn btn-small btn-info {if not $header.isSeedboxInitialized}disabled{/if}" id="update" style="color: white;"><span
                         class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;Update
             </button>
         </div>
