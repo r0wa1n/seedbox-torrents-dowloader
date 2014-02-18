@@ -1,0 +1,48 @@
+<project name="seedbox-torrents-downloader" default="help" basedir=".">
+
+    <!-- read variables from property file and environment -->
+    <property file="build.properties" />    
+
+    <property name="smarty.file.name" value="Smarty-${smarty.version}.tar.gz"/>
+    <property name="smarty.dir.name" value="Smarty-${smarty.version}"/>
+    <property name="build" value="${basedir}/build"/>
+    <property name="site" location="${basedir}/site"/>
+    <property name="src" location="${site}/src"/>
+    <property name="vendor" location="${site}/vendor"/>
+
+    <target name="help">
+        <echo message="Ant build file help. Available targets :" />
+    </target>
+
+    <target name="clean">
+        <delete dir="${build}" />
+        <delete dir="${vendor}" />
+        <delete dir="${src}/smarty/templates_c" />
+        <delete dir="${src}/smarty/cache" />
+    </target>
+
+    <target name="download.smarty" description="Download the smarty utility">
+        <mkdir dir="${build}" />
+        <exec executable="bash">
+            <arg value="-c" />
+            <arg value="curl -s http://www.smarty.net/files/${smarty.file.name} -o ${build}/${smarty.file.name}" />
+        </exec>
+    </target>
+
+    <target name="init" depends="download.smarty">
+        <mkdir dir="${vendor}" />
+    	
+        <untar src="${build}/${smarty.file.name}" dest="${build}" compression="gzip"/>
+        <copy todir="${vendor}/Smarty">
+            <fileset dir="${build}/${smarty.dir.name}/libs"/>
+        </copy>
+
+        <mkdir dir="${src}/smarty/templates_c" />
+        <mkdir dir="${src}/smarty/cache" />
+
+        <chmod dir="${src}/smarty/templates_c" perm="o+w" type="dir"/>
+        <chmod dir="${src}/smarty/cache" perm="o+w" type="dir"/>
+        
+    </target>
+
+</project>    

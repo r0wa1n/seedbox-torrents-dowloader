@@ -39,6 +39,12 @@ function initSmarty($smarty, $currentPage, $diskInfo = true)
     );
 
     $smarty->assign('footer', $footer);
+
+    $smarty->setTemplateDir('../src/smarty/templates');
+    $smarty->setCompileDir('../src/smarty/templates_c');
+    $smarty->setCacheDir('../src/smarty/cache');
+    $smarty->setConfigDir('../src/smarty/configs');
+    $smarty->addPluginsDir('../src/smarty/plugins');
 }
 
 /**
