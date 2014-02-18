@@ -12,4 +12,4 @@ const SEEDBOX_NAME = 'XXX.seedbox.fr';
 
 const TEMP_DIR = '../temp/';
 const FILES_DETAILS_MIRROR_SEEDBOX = 'seedbox_mirror_files_detail.json';
-const SEEDBOX_DETAILS_FILE = 'seedbox_detail.json';
+const SETTINGS_FILE = 'settings.json';

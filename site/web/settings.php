@@ -6,25 +6,43 @@ require_once('../src/utils.php');
 $smarty = new Smarty();
 initSmarty($smarty, 'SETTINGS', false);
 
-if (file_exists(TEMP_DIR . SEEDBOX_DETAILS_FILE)) {
-    $seedboxFileDetails = json_decode(file_get_contents(TEMP_DIR . SEEDBOX_DETAILS_FILE), true);
+if (file_exists(TEMP_DIR . SETTINGS_FILE)) {
+    $settings = json_decode(file_get_contents(TEMP_DIR . SETTINGS_FILE), true);
 
-    if (!empty($seedboxFileDetails['seedboxHost']) && !empty($seedboxFileDetails['seedboxUsername'])
-        && !empty($seedboxFileDetails['seedboxPassword'])
+    if (!empty($settings['seedbox']) && !empty($settings['seedbox']['host']) && !empty($settings['seedbox']['username'])
+        && !empty($settings['seedbox']['password'])
     ) {
         $smarty->assign('seedbox', array(
-            'host' => $seedboxFileDetails['seedboxHost'],
-            'username' => $seedboxFileDetails['seedboxUsername']
+            'host' => $settings['seedbox']['host'],
+            'username' => $settings['seedbox']['username']
+        ));
+    }
+    if (!empty($settings['mailing']) && !empty($settings['mailing']['smtpHost']) && !empty($settings['mailing']['smtpPort'])
+        && !empty($settings['mailing']['ssl']) && !empty($settings['mailing']['username']) && !empty($settings['seedbox']['password'])
+    ) {
+        $smarty->assign('mailing', array(
+            'smtpHost' => $settings['mailing']['smtpHost'],
+            'smtpPort' => $settings['mailing']['smtpPort'],
+            'ssl' => $settings['mailing']['ssl'],
+            'username' => $settings['mailing']['username']
         ));
     }
 }
 
-if(!empty($_GET['error'])) {
-    $smarty->assign('error', true);
+if (!empty($_GET['errorSeedbox'])) {
+    $smarty->assign('errorSeedbox', true);
 }
 
-if(!empty($_GET['success'])) {
-    $smarty->assign('success', true);
+if (!empty($_GET['successSeedbox'])) {
+    $smarty->assign('successSeedbox', true);
+}
+
+if (!empty($_GET['errorMailing'])) {
+    $smarty->assign('errorMailing', true);
+}
+
+if (!empty($_GET['successMailing'])) {
+    $smarty->assign('successMailing', true);
 }
 
 $smarty->display('settings.tpl');

@@ -52,11 +52,11 @@ function initSmarty($smarty, $currentPage, $diskInfo = true)
  */
 function isSeedboxInitialized()
 {
-    if (file_exists(TEMP_DIR . SEEDBOX_DETAILS_FILE)) {
-        $seedboxFileDetails = json_decode(file_get_contents(TEMP_DIR . SEEDBOX_DETAILS_FILE), true);
+    if (file_exists(TEMP_DIR . SETTINGS_FILE)) {
+        $settings = json_decode(file_get_contents(TEMP_DIR . SETTINGS_FILE), true);
 
-        return !(empty($seedboxFileDetails['seedboxHost']) || empty($seedboxFileDetails['seedboxUsername'])
-            || empty($seedboxFileDetails['seedboxPassword']));
+        return !(empty($settings['seedbox']) || empty($settings['seedbox']['host']) || empty($settings['seedbox']['username'])
+            || empty($settings['seedbox']['password']));
     } else {
         return false;
     }
