@@ -37,6 +37,8 @@ $(document).ready(function () {
     });
     // Put timer in order to update size of current downloading files
     setInterval(updateDownloadedFiles, 2000);
+    // init settings page
+    initSettings();
 });
 
 function updateDownloadedFiles() {
@@ -87,7 +89,7 @@ function updateDownloadedFiles() {
                     progressBar.find('span').html('&nbsp;' + data.h);
                     // notify user that the download starts
                     addNotification(progressBar.attr('file') + ' just starts.', 'alert-info');
-                } else if(data == '-1') {
+                } else if (data == '-1') {
                     // if it's equal to -1 it means file is present in download dir
                     var file = progressBar.attr('file');
                     var tr = progressBar.closest('tr');
@@ -101,6 +103,28 @@ function updateDownloadedFiles() {
             }
         });
     });
+}
+
+function initSettings() {
+    var inputEnableMailing = $('#inputMailingEnableMailing');
+    initMailingForm(inputEnableMailing.is(':checked'));
+    // Add listener on mail checkbox
+    inputEnableMailing.click(function () {
+        initMailingForm($(this).is(':checked'));
+    });
+}
+
+function initMailingForm(enabled) {
+    if (!enabled) {
+        $(':input', '#mailing').not(':button, :submit, :reset, :hidden, #inputMailingEnableMailing')
+            .val('')
+            .removeAttr('checked')
+            .removeAttr('selected')
+            .attr('disabled', 'disabled')
+    } else {
+        $(':input', '#mailing').not(':button, :submit, :reset, :hidden, #inputMailingEnableMailing')
+            .removeAttr('disabled')
+    }
 }
 
 function addNotification(text, classAlert) {

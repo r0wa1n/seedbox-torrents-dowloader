@@ -63,7 +63,7 @@
                 {elseif $successMailing}
                     <div class="bs-callout bs-callout-info">
                         <h4>Success</h4>
-                        <p>Your mail information have been saved.</p>
+                        <p>Your mailing information have been saved.</p>
                     </div>
                 {/if}
                 <form class="form-horizontal" role="form" action="updateMailing.php" method="post">
@@ -71,7 +71,7 @@
                         <div class="col-sm-offset-2 col-sm-10">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" {if isset($mailing)}checked="checked"{/if}>Enable mailing when download is completed
+                                    <input id="inputMailingEnableMailing" name="inputMailingEnableMailing" type="checkbox" {if isset($mailing)}checked="checked"{/if}>Enable mailing when download is completed
                                 </label>
                             </div>
                         </div>
@@ -96,7 +96,7 @@
                         <div class="col-sm-offset-2 col-sm-10">
                             <div class="checkbox">
                                 <label>
-                                    <input name="inputMailingSSL" type="checkbox" {if isset($mailing) and $mailing.ssl}checked="checked"{/if}>Enable SSL
+                                    <input name="inputMailingSSL" id="inputMailingSSL" type="checkbox" {if isset($mailing) and $mailing.ssl}checked="checked"{/if}>Enable SSL
                                 </label>
                             </div>
                         </div>

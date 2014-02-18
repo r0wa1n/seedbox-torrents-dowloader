@@ -18,7 +18,7 @@ if (file_exists(TEMP_DIR . SETTINGS_FILE)) {
         ));
     }
     if (!empty($settings['mailing']) && !empty($settings['mailing']['smtpHost']) && !empty($settings['mailing']['smtpPort'])
-        && !empty($settings['mailing']['ssl']) && !empty($settings['mailing']['username']) && !empty($settings['seedbox']['password'])
+        && !empty($settings['mailing']['username']) && !empty($settings['mailing']['password'])
     ) {
         $smarty->assign('mailing', array(
             'smtpHost' => $settings['mailing']['smtpHost'],
