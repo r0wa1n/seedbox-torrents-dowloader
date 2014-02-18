@@ -12,6 +12,8 @@
 
     <target name="help">
         <echo message="Ant build file help. Available targets :" />
+        <echo message="    ant clean           : clean the project, remove everyting that can be generated with the previous targets." />
+        <echo message="    ant init            : initialize the project, download smarty, create necessary directories with right permissions." />
     </target>
 
     <target name="clean">
@@ -19,6 +21,9 @@
         <delete dir="${vendor}" />
         <delete dir="${src}/smarty/templates_c" />
         <delete dir="${src}/smarty/cache" />
+        <delete dir="${site}/temp" />
+        <delete dir="${site}/download" />
+        <delete dir="${site}/logs" />
     </target>
 
     <target name="download.smarty" description="Download the smarty utility">
@@ -42,7 +47,15 @@
 
         <chmod dir="${src}/smarty/templates_c" perm="o+w" type="dir"/>
         <chmod dir="${src}/smarty/cache" perm="o+w" type="dir"/>
-        
+
+        <mkdir dir="${site}/temp" />
+        <mkdir dir="${site}/download" />
+        <mkdir dir="${site}/logs" />
+
+        <chmod dir="${site}/temp" perm="o+w" type="dir"/>
+        <chmod dir="${site}/download" perm="o+w" type="dir"/>
+        <chmod dir="${site}/logs" perm="o+w" type="dir"/>
+
     </target>
 
 </project>    
