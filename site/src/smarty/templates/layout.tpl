@@ -6,6 +6,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
     <link href="css/bootstrap-theme.min.css" rel="stylesheet" media="screen">
+    <link href="css/theme.bootstrap.css" rel="stylesheet" media="screen">
     <link href="css/docs.min.css" rel="stylesheet" media="screen">
     <link href="css/main.css" rel="stylesheet" media="screen">
 </head>
@@ -84,6 +85,8 @@
 </div>
 <script src="js/jquery-min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.tablesorter.min.js"></script>
+<script src="js/jquery.tablesorter.widgets.min.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    // Init table sorter
+    initTableSorter();
     // Link download buttons
     $('.download').click(function () {
         var tdLine = $(this);
@@ -40,6 +42,73 @@ $(document).ready(function () {
     // init settings page
     initSettings();
 });
+
+function initTableSorter() {
+    $.extend($.tablesorter.themes.bootstrap, {
+        // these classes are added to the table. To see other table classes available,
+        // look here: http://twitter.github.com/bootstrap/base-css.html#tables
+        table: 'table table-bordered',
+        caption: 'caption',
+        header: 'bootstrap-header', // give the header a gradient background
+        footerRow: '',
+        footerCells: '',
+        icons: '', // add "icon-white" to make them white; this icon class is added to the <i> in the header
+        sortNone: 'bootstrap-icon-unsorted',
+        sortAsc: 'icon-chevron-up glyphicon glyphicon-chevron-up',     // includes classes for Bootstrap v2 & v3
+        sortDesc: 'icon-chevron-down glyphicon glyphicon-chevron-down', // includes classes for Bootstrap v2 & v3
+        active: '', // applied when column is sorted
+        hover: '', // use custom css here - bootstrap class may not override it
+        filterRow: '', // filter row class
+        even: '', // odd row zebra striping
+        odd: ''  // even row zebra striping
+    });
+    $.tablesorter.addParser({
+        id: 'octet_size',
+        is: function (s) {
+            return false;
+        },
+        format: function (s, table, cell, cellIndex) {
+            var cell = $(cell);
+            return cell.parent().find('input').val()
+        },
+        type: 'numeric'
+    });
+    // Torrents list sortable
+    $("#torrents-list").tablesorter({
+        theme : "bootstrap",
+        widthFixed: true,
+        headerTemplate : '{content} {icon}',
+        widgets : [ "uitheme", "filter", "zebra" ],
+        widgetOptions : {
+            // using the default zebra striping class name, so it actually isn't included in the theme variable above
+            // this is ONLY needed for bootstrap theming if you are using the filter widget, because rows are hidden
+            zebra : ["even", "odd"],
+
+            // reset filters button
+            filter_reset : ".reset"
+
+            // set the uitheme widget to use the bootstrap theme class names
+            // this is no longer required, if theme is set
+            // ,uitheme : "bootstrap"
+
+        },
+        sortList: [
+            // Default sort is first column asc order
+            [0, 0]
+        ],
+        headers: {
+            // For size column, create customer parser
+            1: {
+                sorter: 'octet_size',
+                filter: false
+            },
+            // Disable download column sort
+            2: {
+                sorter: false,
+                filter: false
+            }
+        } });
+}
 
 function updateDownloadedFiles() {
     // Check all current downloading files
