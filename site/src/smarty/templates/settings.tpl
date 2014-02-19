@@ -27,6 +27,14 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label for="inputSeedboxPort" class="col-sm-2 control-label">Port</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="inputSeedboxPort" name="inputSeedboxPort"
+                                   {if isset($seedbox)}value="{$seedbox.port}" {else}placeholder="21"{/if}>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="inputSeedboxUsername" class="col-sm-2 control-label">Username</label>
 
                         <div class="col-sm-10">

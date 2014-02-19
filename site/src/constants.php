@@ -11,5 +11,6 @@ const DOWNLOAD_DIRECTORY = '../download/';
 const SEEDBOX_NAME = 'XXX.seedbox.fr';
 
 const TEMP_DIR = '../temp/';
-const FILES_DETAILS_MIRROR_SEEDBOX = 'seedbox_mirror_files_detail.json';
+const SEEDBOX_DETAILS_FILE = 'seedbox_details_file.json';
+const LAST_UPDATE_FILE = 'last_update';
 const SETTINGS_FILE = 'settings.json';

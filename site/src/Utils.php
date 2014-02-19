@@ -23,7 +23,7 @@ function initSmarty($smarty, $currentPage, $diskInfo = true)
         $percent = 100 * $sizeUsed / $sizeTotal;
         $sizeLeft = $sizeTotal - $sizeUsed;
 
-        $header['lastUpdate'] = date(DATE_PATTERN, file_get_contents('../src/last-update'));
+        $header['lastUpdate'] = date(DATE_PATTERN, file_get_contents(TEMP_DIR . LAST_UPDATE_FILE));
         $header['diskInfo'] = array(
             'totalSize' => $sizeTotal,
             'totalSizeUsed' => $sizeUsed,
@@ -57,6 +57,43 @@ function isSeedboxInitialized()
 
         return !(empty($settings['seedbox']) || empty($settings['seedbox']['host']) || empty($settings['seedbox']['username'])
             || empty($settings['seedbox']['password']));
+    } else {
+        return false;
+    }
+}
+
+/**
+ * Function used to initialize ftp with seedbox information locate in settings file.
+ *
+ * Return false if settings are not set or invalids
+ */
+function createFTPConnection()
+{
+    if (file_exists(TEMP_DIR . SETTINGS_FILE)) {
+        $settings = json_decode(file_get_contents(TEMP_DIR . SETTINGS_FILE), true);
+
+        if (empty($settings['seedbox']) || empty($settings['seedbox']['host']) || empty($settings['seedbox']['username'])
+            || empty($settings['seedbox']['password'])
+        ) {
+            return false;
+        } else {
+            // Connect to seedbox with SSL
+            $ftp = ftp_ssl_connect($settings['seedbox']['host'], intval($settings['seedbox']['port']));
+            if (!$ftp) {
+                return false;
+            }
+            // Log with information set on settings screen
+            if (!ftp_login($ftp, $settings['seedbox']['username'], $settings['seedbox']['password'])) {
+                return false;
+            };
+
+            // Enter on passive mode
+            if (ftp_pasv($ftp, true)) {
+                return $ftp;
+            } else {
+                return false;
+            }
+        }
     } else {
         return false;
     }

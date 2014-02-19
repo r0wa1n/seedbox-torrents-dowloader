@@ -4,15 +4,15 @@
     <table class="table table-striped">
         <tr>
             <th>Torrent name</th>
+            <th>Size</th>
             <th style="width: 100px;"></th>
         </tr>
         {foreach from=$torrents item=torrent}
             <tr {if {$torrent.downloaded}}class="success"{/if}>
                 <td style="word-break: break-all; line-height: 34px;">
-                    {if {$torrent.downloaded}}<span class="glyphicon glyphicon-ok"></span>&nbsp;{/if}
-                    {$torrent.name}
-                    <span class="italic">({convert_octet_to_human_readable_size size={$torrent.size}})</span>
+                    {if {$torrent.downloaded}}<span class="glyphicon glyphicon-ok"></span>&nbsp;{/if}{$torrent.name}
                 </td>
+                <td><span class="italic">{convert_octet_to_human_readable_size size={$torrent.size}}</span></td>
                 <td>
                     {if {$torrent.downloaded}}
                         <button type="button" class="btn btn-small btn-success disabled"><span class="glyphicon glyphicon-save">&nbsp;Download</span></button>
