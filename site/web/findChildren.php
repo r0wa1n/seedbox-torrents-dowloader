@@ -34,13 +34,27 @@ function computeChildren($children, $parent = '')
     return $torrents;
 }
 
+function searchChildren($filePath, $currentPathKey, $files)
+{
+    // Check if currentPath is the last one of $filePath
+    if ($currentPathKey == (count($filePath) - 1)) {
+        return $files[$filePath[$currentPathKey]]['children'];
+    } else {
+        return searchChildren($filePath, ($currentPathKey + 1), $files[$filePath[$currentPathKey]]['children']);
+    }
+}
+
 $smarty = new Smarty();
 initSmarty($smarty, 'HOME');
 
 $filesDetails = json_decode(file_get_contents(TEMP_DIR . SEEDBOX_DETAILS_FILE), true);
-$torrents = computeChildren($filesDetails);
-
+// Search children for this fileName
+$encodedFile = urldecode($_GET['file']);
+$pathFile = explode('/', $encodedFile);
+$torrents = computeChildren(searchChildren($pathFile, 0, $filesDetails));
+//var_dump($torrents);
 $smarty->assign('torrents', $torrents);
-$smarty->assign('level', 0);
+$smarty->assign('parent', $encodedFile);
+$smarty->assign('level', $_GET['level'] + 1);
 
-$smarty->display('index.tpl');
+$smarty->display('torrents-list.tpl');

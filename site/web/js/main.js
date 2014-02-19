@@ -1,6 +1,7 @@
 $(document).ready(function () {
     // Init table sorter
     initTableSorter();
+    initTorrentChildren();
     // Link download buttons
     $('.download').click(function () {
         var tdLine = $(this);
@@ -43,6 +44,29 @@ $(document).ready(function () {
     initSettings();
 });
 
+function initTorrentChildren() {
+    $('.directory').off('click');
+    $('.directory').click(function() {
+        // Remove directory class in order to prevent second click
+        $(this).removeClass('directory');
+        $(this).off('click');
+        // Retrieve encoded file name
+        var parentTr = $(this).parent();
+        $.ajax({
+            type: 'GET',
+            url: 'findChildren.php',
+            data: {
+                file: parentTr.find('td button.download').attr('file'),
+                level: parentTr.attr('level')
+            },
+            success: function (data) {
+                parentTr.after(data);
+                initTorrentChildren();
+            }
+        });
+    });
+}
+
 function initTableSorter() {
     $.extend($.tablesorter.themes.bootstrap, {
         // these classes are added to the table. To see other table classes available,
@@ -78,7 +102,7 @@ function initTableSorter() {
         theme: "bootstrap",
         widthFixed: true,
         headerTemplate: '{content} {icon}',
-        widgets: [ "uitheme", "filter", "zebra" ],
+        widgets: [ "uitheme", "filter" ],
         widgetOptions: {
             zebra: ["even", "odd"],
             filter_reset: ".reset"
@@ -104,7 +128,7 @@ function initTableSorter() {
         theme: "bootstrap",
         widthFixed: true,
         headerTemplate: '{content} {icon}',
-        widgets: [ "uitheme", "filter", "zebra" ],
+        widgets: [ "uitheme", "filter" ],
         widgetOptions: {
             zebra: ["even", "odd"],
             filter_reset: ".reset"
@@ -119,6 +143,8 @@ function initTableSorter() {
                 filter: false
             }
         } });
+    // By default put focus on search-filter
+    $('.tablesorter-filter').focus();
 }
 
 function updateDownloadedFiles() {

@@ -2,19 +2,27 @@
 require_once('../src/constants.php');
 require_once('../src/utils.php');
 
-function initArray($files, $count)
+function initArray($filesRawList, $count)
 {
     $items = array();
     for ($i = 0; $i < $count; $i++) {
-        $file = $files[$i];
+        $file = $filesRawList[$i];
         $item = parseLsOutputInformation($file);
 
-        $size = $item['type'] === 'directory' ? getSize($files, $item['name']) : $item['size'];
+        $children = array();
+        if ($item['type'] === 'directory') {
+            $size = getSize($filesRawList, $item['name']);
+            // Find children
+            $children = findChildren($filesRawList, $item['name']);
+        } else {
+            $size = $item['size'];
+        }
 
-        $items[] = array(
+        $items[$item['name']] = array(
             'name' => $item['name'],
             'size' => $size,
             'type' => $item['type'],
+            'children' => $children,
             'date' => $item['day'] . ' ' . $item['month'] . ' ' . $item['time']
         );
     }
@@ -51,6 +59,41 @@ function parseLsOutputInformation($info)
     return $item;
 }
 
+function findChildren($filesRawList, $file)
+{
+    $children = array();
+    if (in_array('./' . $file . ':', $filesRawList)) {
+        $index = array_search('./' . $file . ':', $filesRawList);
+
+        if (!empty($filesRawList[$index + 2])) {
+            $f = $filesRawList[$index + 2];
+            $offset = 2;
+            while ($f != '' && ($index + $offset) < count($filesRawList)) {
+                $item = parseLsOutputInformation($f);
+                $itemChildren = array();
+                if ($item['type'] === 'directory') {
+                    $size = getSize($filesRawList, $file . '/' . $item['name']);
+                    // Find children
+                    $itemChildren = findChildren($filesRawList, $file . '/' . $item['name']);
+                } else {
+                    $size = $item['size'];
+                }
+                $children[$item['name']] = array(
+                    'name' => $item['name'],
+                    'size' => $size,
+                    'type' => $item['type'],
+                    'children' => $itemChildren,
+                    'date' => $item['day'] . ' ' . $item['month'] . ' ' . $item['time']
+                );
+                $offset++;
+                $f = $filesRawList[$index + $offset];
+            }
+        }
+    }
+
+    return $children;
+}
+
 function getSize($filesRawList, $file)
 {
     if (in_array('./' . $file . ':', $filesRawList)) {
@@ -75,7 +118,7 @@ function getSize($filesRawList, $file)
 
         return $size;
     } else {
-        return -1;
+        return 0;
     }
 }
 

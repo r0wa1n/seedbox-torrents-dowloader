@@ -10,6 +10,9 @@ body { padding-top: 50px; }
 div.content {
     padding: 10px;
 }
+.directory {
+    cursor: pointer;
+}
 .navbar div.warning {
     background-color: #fcf8e3;
     padding: 3px 10px;
