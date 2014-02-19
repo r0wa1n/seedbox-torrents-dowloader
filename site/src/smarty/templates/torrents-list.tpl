@@ -18,7 +18,7 @@
                     <div class="progress-bar downloading" role="progressbar" aria-valuenow="{$torrent.downloading.currentSize}" aria-valuemin="0" aria-valuemax="{$torrent.size}" style="width: {$torrent.downloading.currentPercent}%" file="{$torrent.encodedName}"><span class="glyphicon glyphicon-transfer">&nbsp;' . {$torrent.downloading.currentSize} . '</span></div>
                 </div>
             {else}
-                <button type="button" class="download btn btn-small btn-success" file="{if isset($parent)}{$parent}/{/if}{$torrent.encodedName}"><span class="glyphicon glyphicon-save">&nbsp;Download</span></button>
+                <button type="button" class="download btn btn-small btn-success" file="{if isset($parent)}{$parent}/{/if}{$torrent.encodedName}"><span class="glyphicon glyphicon-save">&nbsp;Download</span><span class="glyphicon glyphicon-save small-screen"></span></button>
             {/if}
         </td>
     </tr>

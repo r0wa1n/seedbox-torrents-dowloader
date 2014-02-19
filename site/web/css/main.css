@@ -51,6 +51,15 @@ div#loading img {
     display: block;
     margin: 0 auto;
 }
+.small-screen {
+    display: none;
+}
 @media screen and (max-width: 768px) {
     body { padding-top: 0; }
+    .download span {
+        display: none;
+    }
+    .small-screen {
+        display: inherit !important;
+    }
 }
