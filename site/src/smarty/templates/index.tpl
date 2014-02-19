@@ -10,7 +10,9 @@
         {foreach from=$torrents item=torrent}
             <tr {if {$torrent.downloaded}}class="success"{/if}>
                 <td style="word-break: break-all; line-height: 34px;">
-                    {if {$torrent.downloaded}}<span class="glyphicon glyphicon-ok"></span>&nbsp;{/if}{$torrent.name}
+                    {if {$torrent.downloaded}}<span class="glyphicon glyphicon-ok"></span>&nbsp;{/if}
+                    {if {$torrent.isDirectory}}<span class="glyphicon glyphicon-folder-open"></span>{else}<span class="glyphicon glyphicon-file"></span>{/if}&nbsp;
+                    {$torrent.name}
                 </td>
                 <td><span class="italic">{convert_octet_to_human_readable_size size={$torrent.size}}</span></td>
                 <td>

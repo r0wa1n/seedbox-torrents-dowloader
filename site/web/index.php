@@ -27,7 +27,8 @@ foreach ($filesDetails as $fileDetail) {
             'downloaded' => $downloaded,
             'size' => $fileSize,
             'name' => $fileDetail['name'],
-            'encodedName' => $fileNameEncoded
+            'encodedName' => $fileNameEncoded,
+            'isDirectory' => $fileDetail['type'] == 'directory'
         );
     }
 }
