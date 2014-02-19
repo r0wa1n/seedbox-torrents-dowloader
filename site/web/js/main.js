@@ -75,22 +75,13 @@ function initTableSorter() {
     });
     // Torrents list sortable
     $("#torrents-list").tablesorter({
-        theme : "bootstrap",
+        theme: "bootstrap",
         widthFixed: true,
-        headerTemplate : '{content} {icon}',
-        widgets : [ "uitheme", "filter", "zebra" ],
-        widgetOptions : {
-            // using the default zebra striping class name, so it actually isn't included in the theme variable above
-            // this is ONLY needed for bootstrap theming if you are using the filter widget, because rows are hidden
-            zebra : ["even", "odd"],
-
-            // reset filters button
-            filter_reset : ".reset"
-
-            // set the uitheme widget to use the bootstrap theme class names
-            // this is no longer required, if theme is set
-            // ,uitheme : "bootstrap"
-
+        headerTemplate: '{content} {icon}',
+        widgets: [ "uitheme", "filter", "zebra" ],
+        widgetOptions: {
+            zebra: ["even", "odd"],
+            filter_reset: ".reset"
         },
         sortList: [
             // Default sort is first column asc order
@@ -104,6 +95,26 @@ function initTableSorter() {
             },
             // Disable download column sort
             2: {
+                sorter: false,
+                filter: false
+            }
+        } });
+    // Logs list sortable
+    $("#logs-list").tablesorter({
+        theme: "bootstrap",
+        widthFixed: true,
+        headerTemplate: '{content} {icon}',
+        widgets: [ "uitheme", "filter", "zebra" ],
+        widgetOptions: {
+            zebra: ["even", "odd"],
+            filter_reset: ".reset"
+        },
+        sortList: [
+            // Default sort is first column asc order
+            [0, 0]
+        ],
+        headers: {
+            1: {
                 sorter: false,
                 filter: false
             }
