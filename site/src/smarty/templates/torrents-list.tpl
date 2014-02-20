@@ -1,7 +1,7 @@
 {foreach from=$torrents item=torrent}
-    <tr {if {$torrent.downloaded}}class="success"{/if} level="{$level}">
+    <tr {if {$torrent.downloaded}}class="success"{/if} level="{$level}" parent="{$parent}">
         <td style="word-break: break-all; line-height: 34px;" {if {$torrent.isDirectory}}class="directory"{/if}>
-            {for $var=1 to $level}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;{/for}
+            {for $var=1 to $level}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{/for}
             {if {$torrent.downloaded}}<span class="glyphicon glyphicon-ok"></span>&nbsp;{/if}
             {if {$torrent.isDirectory}}<span class="glyphicon glyphicon-folder-open"></span>{else}<span class="glyphicon glyphicon-file"></span>{/if}&nbsp;
             {$torrent.name}

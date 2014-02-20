@@ -45,26 +45,47 @@ $(document).ready(function () {
 });
 
 function initTorrentChildren() {
-    $('.directory').off('click');
-    $('.directory').click(function() {
+    var directories = $('.directory');
+    directories.off('click');
+    directories.click(function() {
         // Remove directory class in order to prevent second click
-        $(this).removeClass('directory');
-        $(this).off('click');
+        var parent = $(this);
+        parent.removeClass('directory');
+        parent.addClass('open-directory');
+        parent.off('click');
         // Retrieve encoded file name
-        var parentTr = $(this).parent();
+        var parentTr = parent.parent();
+        var file = parentTr.find('td button.download').attr('file');
         $.ajax({
             type: 'GET',
             url: 'findChildren.php',
             data: {
-                file: parentTr.find('td button.download').attr('file'),
+                file: file,
                 level: parentTr.attr('level')
             },
             success: function (data) {
                 parentTr.after(data);
                 initTorrentChildren();
+                // Add remove children on parent click
+                parent.click(function() {
+                    removeChildren(file);
+                    parent.removeClass('open-directory');
+                    parent.addClass('directory');
+                    parent.off('click');
+                    initTorrentChildren();
+                })
             }
         });
     });
+}
+
+function removeChildren(parent) {
+    $('tr[parent="' + parent + '"]').each(function() {
+        if($(this).children('td:first').hasClass('open-directory')) {
+            removeChildren($(this).find('td button.download').attr('file'));
+        }
+        $(this).remove();
+    })
 }
 
 function initTableSorter() {
