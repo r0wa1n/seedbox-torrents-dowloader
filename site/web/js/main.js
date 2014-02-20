@@ -85,6 +85,18 @@ function initTorrentChildren() {
     });
 }
 
+function removeAllOpenDirectories() {
+    $('.open-directory').each(function() {
+        $(this).removeClass('open-directory');
+        $(this).addClass('directory');
+        var span = $(this).find('span');
+        span.removeClass('glyphicon-folder-open');
+        span.addClass('glyphicon-folder-close');
+        var parent = $(this).parent();
+        removeChildren(parent.find('td button.download').attr('file'));
+    });
+}
+
 function removeChildren(parent) {
     $('tr[parent="' + parent + '"]').each(function() {
         if($(this).children('td:first').hasClass('open-directory')) {
@@ -150,6 +162,9 @@ function initTableSorter() {
                 filter: false
             }
         } });
+    $("#torrents-list").bind("sortStart",function() {
+        removeAllOpenDirectories();
+    });
     // Logs list sortable
     $("#logs-list").tablesorter({
         theme: "bootstrap",
