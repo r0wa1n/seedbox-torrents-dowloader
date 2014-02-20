@@ -52,6 +52,10 @@ function initTorrentChildren() {
         var parent = $(this);
         parent.removeClass('directory');
         parent.addClass('open-directory');
+        // Change icon
+        var span = parent.find('span');
+        span.removeClass('glyphicon-folder-close');
+        span.addClass('glyphicon-folder-open');
         parent.off('click');
         // Retrieve encoded file name
         var parentTr = parent.parent();
@@ -71,6 +75,8 @@ function initTorrentChildren() {
                     removeChildren(file);
                     parent.removeClass('open-directory');
                     parent.addClass('directory');
+                    span.removeClass('glyphicon-folder-open');
+                    span.addClass('glyphicon-folder-close');
                     parent.off('click');
                     initTorrentChildren();
                 })

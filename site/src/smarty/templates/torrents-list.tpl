@@ -3,7 +3,7 @@
         <td style="word-break: break-all; line-height: 34px;" {if {$torrent.isDirectory}}class="directory"{/if}>
             {for $var=1 to $level}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{/for}
             {if {$torrent.downloaded}}<span class="glyphicon glyphicon-ok"></span>&nbsp;{/if}
-            {if {$torrent.isDirectory}}<span class="glyphicon glyphicon-folder-open"></span>{else}<span class="glyphicon glyphicon-file"></span>{/if}&nbsp;
+            {if {$torrent.isDirectory}}<span class="glyphicon glyphicon-folder-close"></span>{else}<span class="glyphicon glyphicon-file"></span>{/if}&nbsp;
             {$torrent.name}
         </td>
         <td>
