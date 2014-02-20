@@ -49,12 +49,12 @@ initSmarty($smarty, 'HOME');
 
 $filesDetails = json_decode(file_get_contents(TEMP_DIR . SEEDBOX_DETAILS_FILE), true);
 // Search children for this fileName
-$encodedFile = urldecode($_GET['file']);
-$pathFile = explode('/', $encodedFile);
+$decodedFile = urldecode($_GET['file']);
+$pathFile = explode('/', $decodedFile);
 $torrents = computeChildren(searchChildren($pathFile, 0, $filesDetails));
 //var_dump($torrents);
 $smarty->assign('torrents', $torrents);
-$smarty->assign('parent', $encodedFile);
+$smarty->assign('parent', $_GET['file']);
 $smarty->assign('level', $_GET['level'] + 1);
 
 $smarty->display('torrents-list.tpl');
