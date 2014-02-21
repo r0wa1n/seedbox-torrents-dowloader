@@ -55,7 +55,7 @@ $pathFile = explode('/', $decodedFile);
 $torrents = computeChildren(searchChildren($pathFile, 0, $filesDetails), $decodedFile . '/');
 
 $smarty->assign('torrents', $torrents);
-$smarty->assign('parent', $decodedFile);
+$smarty->assign('parent', $file);
 $smarty->assign('level', $_GET['level'] + 1);
 
 $smarty->display('torrents-list.tpl');

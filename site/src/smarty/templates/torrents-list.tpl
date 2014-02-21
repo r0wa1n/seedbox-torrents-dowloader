@@ -1,5 +1,5 @@
 {foreach from=$torrents item=torrent}
-    <tr {if {$torrent.downloaded}}class="success"{/if} level="{$level}" parent="{$parent}">
+    <tr {if {$torrent.downloaded}}class="success"{/if} level="{$level}" parent="{$parent}" file="{if isset($parent)}{$parent}/{/if}{$torrent.encodedName}">
         <td style="word-break: break-all; line-height: 34px;" {if {$torrent.isDirectory}}class="directory"{/if}>
             {for $var=1 to $level}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{/for}
             {if {$torrent.isDirectory}}<span class="glyphicon glyphicon-folder-close"></span>{else}<span class="glyphicon glyphicon-file"></span>{/if}&nbsp;
@@ -11,13 +11,13 @@
         </td>
         <td>
             {if {$torrent.downloaded}}
-                <button type="button" class="btn btn-small btn-success disabled" file="{if isset($parent)}{$parent}/{/if}{$torrent.encodedName}"><span class="glyphicon glyphicon-save">&nbsp;Download</span></button>
+                <button type="button" class="btn btn-small btn-success disabled"><span class="glyphicon glyphicon-save">&nbsp;Download</span></button>
             {elseif {$torrent.downloading.status}}
                 <div class="progress progress-striped active">
-                    <div class="progress-bar downloading" role="progressbar" aria-valuenow="{$torrent.downloading.currentSize}" aria-valuemin="0" aria-valuemax="{$torrent.size}" style="width: {$torrent.downloading.currentPercent}%" file="{$torrent.encodedName}"><span class="glyphicon glyphicon-transfer">&nbsp;' . {$torrent.downloading.currentSize} . '</span></div>
+                    <div class="progress-bar downloading" role="progressbar" aria-valuenow="{$torrent.downloading.currentSize}" aria-valuemin="0" aria-valuemax="{$torrent.size}" style="width: {$torrent.downloading.currentPercent}%"><span class="glyphicon glyphicon-transfer">&nbsp;' . {$torrent.downloading.currentSize} . '</span></div>
                 </div>
             {else}
-                <button type="button" class="download btn btn-small btn-success" file="{if isset($parent)}{$parent}/{/if}{$torrent.encodedName}"><span class="glyphicon glyphicon-save">&nbsp;Download</span><span class="glyphicon glyphicon-save small-screen"></span></button>
+                <button type="button" class="download btn btn-small btn-success"><span class="glyphicon glyphicon-save">&nbsp;Download</span><span class="glyphicon glyphicon-save small-screen"></span></button>
             {/if}
         </td>
     </tr>

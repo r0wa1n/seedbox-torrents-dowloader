@@ -9,14 +9,14 @@ $(document).ready(initSettings);
 function initButtonsEvent() {
     // Link download buttons
     $('.download').click(function () {
-        var tdLine = $(this);
+        var tdLine = $(this).parent();
         $.ajax({
             type: 'POST',
             url: 'download.php',
-            data: { file: tdLine.attr('file') },
+            data: { file: tdLine.parent().attr('file') },
             success: function (data) {
                 // Change button to pending button
-                tdLine.parent().html('<div class="progress progress-striped active"><div class="progress-bar pending" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%" file="' + tdLine.attr('file') + '"><span class="glyphicon glyphicon-import">&nbsp;Pending...</span></div></div>');
+                toPending(tdLine);
             },
             error: function () {
                 alert('Error when downloading file...');
@@ -65,7 +65,7 @@ function initTorrentChildren() {
         parent.off('click');
         // Retrieve encoded file name
         var parentTr = parent.parent();
-        var file = parentTr.find('td button').attr('file');
+        var file = parentTr.attr('file');
         $.ajax({
             type: 'GET',
             url: 'findChildren.php',
@@ -102,7 +102,7 @@ function removeAllOpenDirectories() {
         span.removeClass('glyphicon-folder-open');
         span.addClass('glyphicon-folder-close');
         var parent = $(this).parent();
-        removeChildren(parent.find('td button').attr('file'));
+        removeChildren(parent.attr('file'));
     });
 }
 
@@ -113,10 +113,26 @@ function removeAllOpenDirectories() {
 function removeChildren(parent) {
     $('tr[parent="' + parent + '"]').each(function () {
         if ($(this).children('td:first').hasClass('open-directory')) {
-            removeChildren($(this).find('td button').attr('file'));
+            removeChildren($(this).attr('file'));
         }
         $(this).remove();
-    })
+    });
+}
+
+function pendingChildren(parent) {
+    $('tr[parent="' + parent + '"]').each(function () {
+        if ($(this).children('td:first').hasClass('open-directory')) {
+            pendingChildren($(this).attr('file'));
+        }
+        toPending($(this).find('td:last-child'));
+    });
+}
+
+function toPending(td) {
+    var file = td.parent().attr('file');
+    td.html('<div class="progress progress-striped active"><div class="progress-bar pending" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%" file="' + file + '"><span class="glyphicon glyphicon-import">&nbsp;Pending...</span></div></div>');
+    // Think to children too
+    pendingChildren(file);
 }
 
 /**
@@ -218,7 +234,7 @@ function updateDownloadedFiles() {
         $.ajax({
             type: 'GET',
             url: 'size.php',
-            data: { file: progressBar.attr('file') },
+            data: { file: progressBar.closest('tr').attr('file') },
             success: function (data) {
                 if (data != '' && data != '-1') {
                     data = JSON.parse(data);
@@ -228,8 +244,8 @@ function updateDownloadedFiles() {
                     progressBar.find('span').html('&nbsp;' + data.h);
                 } else if (data == '-1') {
                     // if it's equal to -1 it means file is present in download dir
-                    var file = progressBar.attr('file');
                     var tr = progressBar.closest('tr');
+                    var file = tr.attr('file');
                     tr.addClass('success');
                     tr.find('td:last-child').empty();
                     tr.find('td:last-child').append('<button type="button" class="btn btn-small btn-success disabled"><span class="glyphicon glyphicon-save">&nbsp;Download</span></button>');
@@ -245,7 +261,7 @@ function updateDownloadedFiles() {
         $.ajax({
             type: 'GET',
             url: 'size.php',
-            data: { file: progressBar.attr('file') },
+            data: { file: progressBar.closest('tr').attr('file') },
             success: function (data) {
                 if (data != '' && data != '-1') {
                     data = JSON.parse(data);
@@ -260,8 +276,8 @@ function updateDownloadedFiles() {
                     addNotification(progressBar.attr('file') + ' just starts.', 'alert-info');
                 } else if (data == '-1') {
                     // if it's equal to -1 it means file is present in download dir
-                    var file = progressBar.attr('file');
                     var tr = progressBar.closest('tr');
+                    var file = tr.attr('file');
                     tr.addClass('success');
                     tr.find('td:last-child').empty();
                     tr.find('td:last-child').append('<button type="button" class="btn btn-small btn-success disabled"><span class="glyphicon glyphicon-save">&nbsp;Download</span></button>');
