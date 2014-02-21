@@ -3,28 +3,28 @@ require_once('../vendor/Smarty/Smarty.class.php');
 require_once('../src/constants.php');
 require_once('../src/utils.php');
 
-function computeChildren($children, $parent = '')
+function computeChildren($children)
 {
     $torrents = array();
     foreach ($children as $fileDetail) {
         if ($fileDetail['name'] != 'recycle_bin') {
             // Check if file has already been downloaded
-            $downloaded = shell_exec('find ' . DOWNLOAD_DIRECTORY . ' -name "' . $parent . $fileDetail['name'] . '" | wc -l') >= 1;
+            $downloaded = file_exists(DOWNLOAD_DIRECTORY . $fileDetail['name']);
             $fileSize = $fileDetail['size'];
             $fileNameEncoded = urlencode($fileDetail['name']);
-            $downloadingStatus = file_exists(TEMP_DIR . SEEDBOX_NAME . '/' . $parent . $fileDetail['name']);
+            $downloadingStatus = file_exists(TEMP_DIR . SEEDBOX_NAME . '/' . $fileDetail['name']);
             $downloading = array(
                 'status' => $downloadingStatus
             );
             if ($downloadingStatus) {
-                $downloading['currentSize'] = shell_exec('du -sk ' . TEMP_DIR . SEEDBOX_NAME . '/' . $parent . $fileDetail['name'] . ' | awk \'{print$1}\'') * 1024;
+                $downloading['currentSize'] = getFileSize(TEMP_DIR . SEEDBOX_NAME . '/' . $fileDetail['name']);
                 $downloading['currentPercent'] = 100 * $downloading['currentSize'] / $fileSize;
             }
 
             $torrents[] = array(
                 'downloaded' => $downloaded,
                 'size' => $fileSize,
-                'name' => $parent . $fileDetail['name'],
+                'name' => $fileDetail['name'],
                 'encodedName' => $fileNameEncoded,
                 'isDirectory' => $fileDetail['type'] === 'directory'
             );

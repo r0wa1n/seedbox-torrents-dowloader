@@ -20,8 +20,10 @@ function initSmarty($smarty, $currentPage, $diskInfo = true)
 
     if ($diskInfo) {
         /* DISK SIZE INFO */
-        $sizeTotal = shell_exec('df ' . ROOT_SERVER_DIRECTORY . ' | awk \'NR==2{print$2}\'') * 512;
-        $sizeUsed = shell_exec('df ' . ROOT_SERVER_DIRECTORY . ' | awk \'NR==2{print$3}\'') * 512;
+        $diskInfo = shell_exec('df -k ' . ROOT_SERVER_DIRECTORY . ' | awk \'NR==2\'');
+        $diskInfo = explode(' ', $diskInfo);
+        $sizeTotal = $diskInfo[3] * 1024;
+        $sizeUsed = $diskInfo[4] * 1024;
         $percent = 100 * $sizeUsed / $sizeTotal;
         $sizeLeft = $sizeTotal - $sizeUsed;
 
@@ -181,6 +183,11 @@ function sendMail($text, $subject)
     } else {
         return false;
     }
+}
+
+function getFileSize($file)
+{
+    return shell_exec('du -sk ' . $file . ' | awk \'{print$1}\'') * 1024;
 }
 
 /**

@@ -9,7 +9,7 @@ function computeChildren($children, $parent = '')
     foreach ($children as $fileDetail) {
         if ($fileDetail['name'] != 'recycle_bin') {
             // Check if file has already been downloaded
-            $downloaded = shell_exec('find ' . DOWNLOAD_DIRECTORY . ' -name "' . $parent . $fileDetail['name'] . '" | wc -l') >= 1;
+            $downloaded = file_exists(DOWNLOAD_DIRECTORY . $parent . $fileDetail['name']);
             $fileSize = $fileDetail['size'];
             $fileNameEncoded = urlencode($fileDetail['name']);
             $downloadingStatus = file_exists(TEMP_DIR . SEEDBOX_NAME . '/' . $parent . $fileDetail['name']);
@@ -17,14 +17,14 @@ function computeChildren($children, $parent = '')
                 'status' => $downloadingStatus
             );
             if ($downloadingStatus) {
-                $downloading['currentSize'] = shell_exec('du -sk ' . TEMP_DIR . SEEDBOX_NAME . '/' . $parent . $fileDetail['name'] . ' | awk \'{print$1}\'') * 1024;
+                $downloading['currentSize'] = getFileSize(TEMP_DIR . SEEDBOX_NAME . '/' . $parent . $fileDetail['name']);
                 $downloading['currentPercent'] = 100 * $downloading['currentSize'] / $fileSize;
             }
 
             $torrents[] = array(
                 'downloaded' => $downloaded,
                 'size' => $fileSize,
-                'name' => $parent . $fileDetail['name'],
+                'name' => $fileDetail['name'],
                 'encodedName' => $fileNameEncoded,
                 'isDirectory' => $fileDetail['type'] === 'directory'
             );
@@ -49,12 +49,13 @@ initSmarty($smarty, 'HOME');
 
 $filesDetails = json_decode(file_get_contents(TEMP_DIR . SEEDBOX_DETAILS_FILE), true);
 // Search children for this fileName
-$decodedFile = urldecode($_GET['file']);
+$file = $_GET['file'];
+$decodedFile = urldecode($file);
 $pathFile = explode('/', $decodedFile);
-$torrents = computeChildren(searchChildren($pathFile, 0, $filesDetails));
-//var_dump($torrents);
+$torrents = computeChildren(searchChildren($pathFile, 0, $filesDetails), $decodedFile . '/');
+
 $smarty->assign('torrents', $torrents);
-$smarty->assign('parent', $_GET['file']);
+$smarty->assign('parent', $decodedFile);
 $smarty->assign('level', $_GET['level'] + 1);
 
 $smarty->display('torrents-list.tpl');

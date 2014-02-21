@@ -54,7 +54,7 @@ function initTorrentChildren() {
     var directories = $('.directory');
     directories.off('click');
     directories.click(function () {
-        // Remove directory class in order to prevent second click
+        // Remove directory class click in order to prevent second click
         var parent = $(this);
         parent.removeClass('directory');
         parent.addClass('open-directory');
@@ -65,7 +65,7 @@ function initTorrentChildren() {
         parent.off('click');
         // Retrieve encoded file name
         var parentTr = parent.parent();
-        var file = parentTr.find('td button.download').attr('file');
+        var file = parentTr.find('td button').attr('file');
         $.ajax({
             type: 'GET',
             url: 'findChildren.php',
@@ -102,7 +102,7 @@ function removeAllOpenDirectories() {
         span.removeClass('glyphicon-folder-open');
         span.addClass('glyphicon-folder-close');
         var parent = $(this).parent();
-        removeChildren(parent.find('td button.download').attr('file'));
+        removeChildren(parent.find('td button').attr('file'));
     });
 }
 
@@ -113,7 +113,7 @@ function removeAllOpenDirectories() {
 function removeChildren(parent) {
     $('tr[parent="' + parent + '"]').each(function () {
         if ($(this).children('td:first').hasClass('open-directory')) {
-            removeChildren($(this).find('td button.download').attr('file'));
+            removeChildren($(this).find('td button').attr('file'));
         }
         $(this).remove();
     })
@@ -231,7 +231,6 @@ function updateDownloadedFiles() {
                     var file = progressBar.attr('file');
                     var tr = progressBar.closest('tr');
                     tr.addClass('success');
-                    tr.find('td:first-child').prepend('<span class="glyphicon glyphicon-ok"></span>&nbsp;');
                     tr.find('td:last-child').empty();
                     tr.find('td:last-child').append('<button type="button" class="btn btn-small btn-success disabled"><span class="glyphicon glyphicon-save">&nbsp;Download</span></button>');
                     // notify user that the download is complete
@@ -264,7 +263,6 @@ function updateDownloadedFiles() {
                     var file = progressBar.attr('file');
                     var tr = progressBar.closest('tr');
                     tr.addClass('success');
-                    tr.find('td:first-child').prepend('<span class="glyphicon glyphicon-ok"></span>&nbsp;');
                     tr.find('td:last-child').empty();
                     tr.find('td:last-child').append('<button type="button" class="btn btn-small btn-success disabled"><span class="glyphicon glyphicon-save">&nbsp;Download</span></button>');
                     // notify user that the download is complete

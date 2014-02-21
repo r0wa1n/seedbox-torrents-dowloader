@@ -13,7 +13,7 @@ if (empty($file)) {
     }
 } else {
     $decodedFile = urldecode($file);
-    $size = shell_exec('du -sk ' . TEMP_DIR . SEEDBOX_NAME . '/' . $decodedFile . ' | awk \'{print$1}\'') * 1024;
+    $size = getFileSize(TEMP_DIR . SEEDBOX_NAME . '/' . $decodedFile);
     $filesDetails = json_decode(file_get_contents(TEMP_DIR . SEEDBOX_DETAILS_FILE), true);
     foreach ($filesDetails as $fileDetail) {
         if ($fileDetail['file'] == $decodedFile) {
