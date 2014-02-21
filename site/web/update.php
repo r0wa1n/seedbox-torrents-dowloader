@@ -135,5 +135,5 @@ if ($ftp) {
     ftp_close($ftp);
 
     // Update last update file
-    file_put_contents(TEMP_DIR . LAST_UPDATE_FILE, round(microtime(true) * 1000));
+    file_put_contents(TEMP_DIR . LAST_UPDATE_FILE, round(microtime(true)));
 }

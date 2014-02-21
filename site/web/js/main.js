@@ -1,7 +1,12 @@
-$(document).ready(function () {
-    // Init table sorter
-    initTableSorter();
-    initTorrentChildren();
+$(document).ready(initTableSorter);
+$(document).ready(initTorrentChildren);
+$(document).ready(initButtonsEvent);
+$(document).ready(initSettings);
+
+/**
+ * Function used to init event on download buttons and upload button
+ */
+function initButtonsEvent() {
     // Link download buttons
     $('.download').click(function () {
         var tdLine = $(this);
@@ -40,14 +45,15 @@ $(document).ready(function () {
     });
     // Put timer in order to update size of current downloading files
     setInterval(updateDownloadedFiles, 2000);
-    // init settings page
-    initSettings();
-});
+}
 
+/**
+ * Function used to find children for each directories on click
+ */
 function initTorrentChildren() {
     var directories = $('.directory');
     directories.off('click');
-    directories.click(function() {
+    directories.click(function () {
         // Remove directory class in order to prevent second click
         var parent = $(this);
         parent.removeClass('directory');
@@ -71,7 +77,7 @@ function initTorrentChildren() {
                 parentTr.after(data);
                 initTorrentChildren();
                 // Add remove children on parent click
-                parent.click(function() {
+                parent.click(function () {
                     removeChildren(file);
                     parent.removeClass('open-directory');
                     parent.addClass('directory');
@@ -85,8 +91,11 @@ function initTorrentChildren() {
     });
 }
 
+/**
+ * Function used to remove all open directories
+ */
 function removeAllOpenDirectories() {
-    $('.open-directory').each(function() {
+    $('.open-directory').each(function () {
         $(this).removeClass('open-directory');
         $(this).addClass('directory');
         var span = $(this).find('span');
@@ -97,15 +106,22 @@ function removeAllOpenDirectories() {
     });
 }
 
+/**
+ * Function used to remove all children for a specific parent
+ * @param parent
+ */
 function removeChildren(parent) {
-    $('tr[parent="' + parent + '"]').each(function() {
-        if($(this).children('td:first').hasClass('open-directory')) {
+    $('tr[parent="' + parent + '"]').each(function () {
+        if ($(this).children('td:first').hasClass('open-directory')) {
             removeChildren($(this).find('td button.download').attr('file'));
         }
         $(this).remove();
     })
 }
 
+/**
+ * Function which initialize table sorter plugin and initialize torrents and logs list
+ */
 function initTableSorter() {
     $.extend($.tablesorter.themes.bootstrap, {
         // these classes are added to the table. To see other table classes available,
@@ -137,7 +153,8 @@ function initTableSorter() {
         type: 'numeric'
     });
     // Torrents list sortable
-    $("#torrents-list").tablesorter({
+    var torrentsList = $("#torrents-list");
+    torrentsList.tablesorter({
         theme: "bootstrap",
         widthFixed: true,
         headerTemplate: '{content} {icon}',
@@ -162,9 +179,11 @@ function initTableSorter() {
                 filter: false
             }
         } });
-    $("#torrents-list").bind("sortStart",function() {
+    torrentsList.bind("sortStart",function () {
         removeAllOpenDirectories();
-    });
+    }).bind("filterStart", function () {
+            removeAllOpenDirectories();
+        });
     // Logs list sortable
     $("#logs-list").tablesorter({
         theme: "bootstrap",
@@ -189,6 +208,9 @@ function initTableSorter() {
     $('.tablesorter-filter').focus();
 }
 
+/**
+ * Function used when a download is start or in progress, to know his progression
+ */
 function updateDownloadedFiles() {
     // Check all current downloading files
     $('.downloading').each(function () {
@@ -253,6 +275,9 @@ function updateDownloadedFiles() {
     });
 }
 
+/**
+ * Function used to initialize form on settings screen
+ */
 function initSettings() {
     var inputEnableMailing = $('#inputMailingEnableMailing');
     initMailingForm(inputEnableMailing.is(':checked'));
@@ -262,6 +287,10 @@ function initSettings() {
     });
 }
 
+/**
+ * Function used to enable or disable settings form fields
+ * @param enabled
+ */
 function initMailingForm(enabled) {
     if (!enabled) {
         $(':input', '#mailing').not(':button, :submit, :reset, :hidden, #inputMailingEnableMailing')
@@ -275,6 +304,11 @@ function initMailingForm(enabled) {
     }
 }
 
+/**
+ * Function used to add a new notification on the top of the screen
+ * @param text test to display
+ * @param classAlert (alert-success, alert-info, ...)
+ */
 function addNotification(text, classAlert) {
     var div = $('<div/>', {
         class: 'alert ' + classAlert,
