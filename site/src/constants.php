@@ -8,7 +8,7 @@ const DATE_PATTERN = 'd/m/Y H:i';
 const ROOT_SERVER_DIRECTORY = '/'; // Used to know the free available space
 const LOGS_DIRECTORY = '../logs/';
 const DOWNLOAD_DIRECTORY = '../download/';
-const SEEDBOX_NAME = 'XXX.seedbox.fr';
+const SEEDBOX_NAME = 'pool159.seedbox.fr';
 
 const TEMP_DIR = '../temp/';
 const SEEDBOX_DETAILS_FILE = 'seedbox_details_file.json';

@@ -257,6 +257,7 @@ function updateDownloadedFiles() {
     });
     // Check all pending files
     $('.pending').each(function () {
+        console.log('check size for file : ' + $(this).closest('tr').attr('file'));
         var progressBar = $(this);
         $.ajax({
             type: 'GET',

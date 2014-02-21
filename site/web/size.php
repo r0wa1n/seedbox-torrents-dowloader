@@ -4,15 +4,15 @@ $file = urldecode($file);
 
 include('../src/constants.php');
 include('../src/utils.php');
-if (empty($file)) {
+$decodedFile = urldecode($file);
+if (empty($decodedFile)) {
     http_response_code(400);
-} else if (!file_exists(TEMP_DIR . SEEDBOX_NAME . '/' . $file)) {
+} else if (!file_exists(TEMP_DIR . SEEDBOX_NAME . '/' . $decodedFile)) {
     // Check if file is not in download dir
-    if(file_exists(DOWNLOAD_DIRECTORY . $file)) {
+    if(file_exists(DOWNLOAD_DIRECTORY . $decodedFile)) {
         echo '-1';
     }
 } else {
-    $decodedFile = urldecode($file);
     $size = getFileSize(TEMP_DIR . SEEDBOX_NAME . '/' . $decodedFile);
     $filesDetails = json_decode(file_get_contents(TEMP_DIR . SEEDBOX_DETAILS_FILE), true);
     foreach ($filesDetails as $fileDetail) {
