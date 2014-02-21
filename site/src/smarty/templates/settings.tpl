@@ -93,23 +93,6 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="inputMailingSmtpPort" class="col-sm-2 control-label">Smtp Port</label>
-
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="inputMailingSmtpPort" name="inputMailingSmtpPort"
-                                   {if isset($mailing)}value="{$mailing.smtpPort}" {else}placeholder="465"{/if}>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <div class="checkbox">
-                                <label>
-                                    <input name="inputMailingSSL" id="inputMailingSSL" type="checkbox" {if isset($mailing) and $mailing.ssl}checked="checked"{/if}>Enable SSL
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
                         <label for="inputMailingUsername" class="col-sm-2 control-label">Username</label>
 
                         <div class="col-sm-10">

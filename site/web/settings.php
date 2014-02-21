@@ -17,7 +17,7 @@ if (file_exists(TEMP_DIR . SETTINGS_FILE)) {
             'port' => $settings['seedbox']['port']
         ));
     }
-    if (!empty($settings['mailing']) && !empty($settings['mailing']['smtpHost']) && !empty($settings['mailing']['smtpPort'])
+    if (!empty($settings['mailing']) && !empty($settings['mailing']['smtpHost'])
         && !empty($settings['mailing']['username']) && !empty($settings['mailing']['password'])
     ) {
         $smarty->assign('mailing', array(

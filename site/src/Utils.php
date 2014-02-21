@@ -1,5 +1,7 @@
 <?php
 require_once('../src/constants.php');
+require_once('../vendor/PHPMailer/PHPMailerAutoload.php');
+require_once('../vendor/Smarty/Smarty.class.php');
 
 /**
  * Function which initialise smarty with header and footer information
@@ -40,6 +42,16 @@ function initSmarty($smarty, $currentPage, $diskInfo = true)
 
     $smarty->assign('footer', $footer);
 
+    initSettingsSmarty($smarty);
+}
+
+/**
+ * Function initialize settings for smarty
+ *
+ * @param $smarty
+ */
+function initSettingsSmarty($smarty)
+{
     $smarty->setTemplateDir('../src/smarty/templates');
     $smarty->setCompileDir('../src/smarty/templates_c');
     $smarty->setCacheDir('../src/smarty/cache');
@@ -93,6 +105,78 @@ function createFTPConnection()
             } else {
                 return false;
             }
+        }
+    } else {
+        return false;
+    }
+}
+
+/**
+ * Function used to send an email when a download is completed
+ *
+ * @param $parameters array with possibles values are
+ * <ul>
+ *  <li>file</li>
+ *  <li>size</li>
+ *  <li>begin</li>
+ *  <li>end</li>
+ *  <li>duration</li>
+ *  <li>average</li>
+ * </ul>
+ */
+function sendCompleteMail($parameters)
+{
+    $smarty = new Smarty();
+    initSettingsSmarty($smarty);
+
+    foreach ($parameters as $key => $value) {
+        $smarty->assign($key, $value);
+    }
+    $subject = 'Your download is complete';
+    $smarty->assign('title', $subject);
+    $smarty->assign('css', file_get_contents('../web/css/bootstrap.min.css'));
+    $smarty->assign('footer', sprintf(WEBSITE_FOOTER, date('Y')));
+    $output = $smarty->fetch('mail-download-complete.tpl');
+
+    sendMail($output, $subject);
+}
+
+/**
+ * Abstract function used to send an email
+ * @param $text
+ * @param $subject
+ * @return bool
+ */
+function sendMail($text, $subject)
+{
+    if (file_exists(TEMP_DIR . SETTINGS_FILE)) {
+        $settings = json_decode(file_get_contents(TEMP_DIR . SETTINGS_FILE), true);
+
+        if (empty($settings['mailing']) || empty($settings['mailing']['smtpHost']) ||
+            empty($settings['mailing']['username']) || empty($settings['mailing']['password'])
+        ) {
+            return false;
+        } else {
+            $mail = new PHPMailer;
+
+            $mail->isSMTP();
+            $mail->Host = $settings['mailing']['smtpHost'];
+            $mail->SMTPAuth = true;
+            $mail->Username = $settings['mailing']['username'];
+            $mail->Password = $settings['mailing']['password'];
+            $mail->SMTPSecure = 'tls';
+
+            $mail->From = $settings['mailing']['username'];
+            $mail->FromName = $settings['mailing']['username'];
+            die('TODO addAddress in settings file');
+            $mail->addAddress('TODO', 'TODO');
+            $mail->addReplyTo($settings['mailing']['username'], 'No-Reply');
+            $mail->isHTML(true);
+
+            $mail->Subject = $subject;
+            $mail->Body = $text;
+
+            return !$mail->send();
         }
     } else {
         return false;
