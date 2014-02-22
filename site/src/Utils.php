@@ -170,8 +170,7 @@ function sendMail($text, $subject)
 
             $mail->From = $settings['mailing']['username'];
             $mail->FromName = $settings['mailing']['username'];
-            die('TODO addAddress in settings file');
-            $mail->addAddress('TODO', 'TODO');
+            $mail->addAddress($settings['mailing']['recipient'], $settings['mailing']['recipient']);
             $mail->addReplyTo($settings['mailing']['username'], 'No-Reply');
             $mail->isHTML(true);
 

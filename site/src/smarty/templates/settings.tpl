@@ -14,7 +14,7 @@
                 {elseif $successSeedbox}
                     <div class="bs-callout bs-callout-info">
                         <h4>Success</h4>
-                        <p>Your seedbox information have been saved.</p>
+                        <p>Your seedbox information has been saved.</p>
                     </div>
                 {/if}
                 <form class="form-horizontal" role="form" action="updateSeedbox.php" method="post">
@@ -71,7 +71,7 @@
                 {elseif $successMailing}
                     <div class="bs-callout bs-callout-info">
                         <h4>Success</h4>
-                        <p>Your mailing information have been saved.</p>
+                        <p>Your mailing information has been saved.</p>
                     </div>
                 {/if}
                 <form class="form-horizontal" role="form" action="updateMailing.php" method="post">
@@ -106,6 +106,15 @@
                         <div class="col-sm-10">
                             <input type="password" class="form-control" id="inputMailingPassword" name="inputMailingPassword"
                                    placeholder="Password">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label for="inputMailingRecipient" class="col-sm-2 control-label">Recipient</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="inputMailingRecipient" name="inputMailingRecipient"
+                                   {if isset($mailing)}value="{$mailing.recipient}" {else}placeholder="test@gmail.com"{/if}>
                         </div>
                     </div>
                     <div class="form-group">

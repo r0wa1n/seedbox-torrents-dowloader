@@ -3,8 +3,9 @@ $mailingEnabled = $_POST['inputMailingEnableMailing'];
 $mailingSmtpHost = $_POST['inputMailingSmtpHost'];
 $mailingUsername = $_POST['inputMailingUsername'];
 $mailingPassword = $_POST['inputMailingPassword'];
+$mailingRecipient = $_POST['inputMailingRecipient'];
 
-if ($mailingEnabled && (empty($mailingSmtpHost) || empty($mailingUsername) || empty($mailingPassword))
+if ($mailingEnabled && (empty($mailingSmtpHost) || empty($mailingUsername) || empty($mailingPassword) || empty($mailingRecipient))
 ) {
     header('Location: settings.php?errorMailing=true#mailing');
 } else {
@@ -20,7 +21,8 @@ if ($mailingEnabled && (empty($mailingSmtpHost) || empty($mailingUsername) || em
         $settings['mailing'] = array(
             'smtpHost' => $mailingSmtpHost,
             'username' => $mailingUsername,
-            'password' => $mailingPassword
+            'password' => $mailingPassword,
+            'recipient' => $mailingRecipient
         );
     }
 
