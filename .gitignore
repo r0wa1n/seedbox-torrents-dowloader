@@ -2,3 +2,7 @@
 .DS_Store
 build/
 site/vendor/
+site/temp/
+site/download/
+site/logs/
+site/src/smarty/template_c/
