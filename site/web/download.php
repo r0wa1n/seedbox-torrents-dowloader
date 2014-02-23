@@ -4,7 +4,6 @@ $file = $_POST['file'];
 if (empty($file)) {
     http_response_code(400);
 } else {
-    $file = urldecode($file);
     // Start download
-    shell_exec('../../scripts/download-files-server.sh "' . $file . '" > /dev/null 2>/dev/null &');
+    shell_exec('/usr/bin/php ../src/download.php "' . $file . '" > /dev/null 2>/dev/null &');
 }

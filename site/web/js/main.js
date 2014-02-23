@@ -43,6 +43,16 @@ function initButtonsEvent() {
             });
         });
     });
+    // Link delete button
+    $('.delete').click(function() {
+        var file = $(this).closest('tr').attr('file');
+        $('#delete-file-input').val(file);
+        $('#delete-popup-content').html('Are you sure to delete this file on your seedbox : ' + file);
+        $('#delete-popup').modal();
+    });
+    $('#delete-button').click(function() {
+        alert('TODO');
+    })
     // Put timer in order to update size of current downloading files
     setInterval(updateDownloadedFiles, 2000);
 }
@@ -191,6 +201,10 @@ function initTableSorter() {
             },
             // Disable download column sort
             2: {
+                sorter: false,
+                filter: false
+            },
+            3: {
                 sorter: false,
                 filter: false
             }

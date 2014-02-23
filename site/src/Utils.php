@@ -136,7 +136,6 @@ function sendCompleteMail($parameters)
     }
     $subject = 'Your download is complete';
     $smarty->assign('title', $subject);
-    $smarty->assign('css', file_get_contents('../web/css/bootstrap.min.css'));
     $smarty->assign('footer', sprintf(WEBSITE_FOOTER, date('Y')));
     $output = $smarty->fetch('mail-download-complete.tpl');
 

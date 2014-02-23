@@ -7,6 +7,6 @@
         <li>Begin at : {$begin}</li>
         <li>Finish at : {$end}</li>
         <li>Duration : {$duration}</li>
-        <li>Average : {$average}</li>
+        <li>Average : {$average}Mo/s</li>
     </ul>
 {/block}

@@ -20,5 +20,8 @@
                 <button type="button" class="download btn btn-small btn-success"><span class="glyphicon glyphicon-save">&nbsp;Download</span><span class="glyphicon glyphicon-save small-screen"></span></button>
             {/if}
         </td>
+        <td style="line-height: 34px;">
+            <span class="glyphicon glyphicon-remove delete"></span>
+        </td>
     </tr>
 {/foreach}
