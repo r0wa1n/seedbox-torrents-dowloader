@@ -44,13 +44,13 @@ function initButtonsEvent() {
         });
     });
     // Link delete button
-    $('.delete').click(function() {
+    $('.delete').click(function () {
         var file = $(this).closest('tr').attr('file');
         $('#delete-file-input').val(file);
         $('#delete-popup-content').html('Are you sure to delete this file on your seedbox : ' + file);
         $('#delete-popup').modal();
     });
-    $('#delete-button').click(function() {
+    $('#delete-button').click(function () {
         alert('TODO');
     })
     // Put timer in order to update size of current downloading files
@@ -134,7 +134,7 @@ function pendingChildren(parent) {
         if ($(this).children('td:first').hasClass('open-directory')) {
             pendingChildren($(this).attr('file'));
         }
-        toPending($(this).find('td:last-child'));
+        toPending($(this).find('td:last-child').prev());
     });
 }
 
@@ -143,6 +143,30 @@ function toPending(td) {
     td.html('<div class="progress progress-striped active"><div class="progress-bar pending" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%" file="' + file + '"><span class="glyphicon glyphicon-import">&nbsp;Pending...</span></div></div>');
     // Think to children too
     pendingChildren(file);
+}
+
+function toDownloading(progressBar, data) {
+    var file = progressBar.closest('tr').attr('file');
+    data = JSON.parse(data);
+    progressBar.removeClass('pending');
+    progressBar.addClass('downloading');
+    progressBar.attr('aria-valuenow', data.s);
+    progressBar.attr('aria-valuemax', data.t);
+    var percent = 100 * data.s / data.t;
+    progressBar.css('width', percent + '%');
+    progressBar.find('span').html('&nbsp;' + data.h);
+    // notify user that the download starts
+    addNotification(file + ' just starts.', 'alert-info');
+}
+
+function toFinish(td) {
+    var tr = td.parent();
+    var file = tr.attr('file');
+    tr.addClass('success');
+    tr.find('td:last-child').prev().empty();
+    tr.find('td:last-child').prev().append('<button type="button" class="btn btn-small btn-success disabled"><span class="glyphicon glyphicon-save">&nbsp;Download</span></button>');
+    // notify user that the download is complete
+    addNotification(file + ' just complete.', 'alert-success');
 }
 
 /**
@@ -199,7 +223,7 @@ function initTableSorter() {
                 sorter: 'octet_size',
                 filter: false
             },
-            // Disable download column sort
+            // Disable download and delete columns
             2: {
                 sorter: false,
                 filter: false
@@ -250,54 +274,34 @@ function updateDownloadedFiles() {
             url: 'size.php',
             data: { file: progressBar.closest('tr').attr('file') },
             success: function (data) {
-                if (data != '' && data != '-1') {
-                    data = JSON.parse(data);
-                    progressBar.attr('aria-valuenow', data.s);
-                    var percent = 100 * data.s / data.t;
-                    progressBar.css('width', percent + '%');
-                    progressBar.find('span').html('&nbsp;' + data.h);
-                } else if (data == '-1') {
-                    // if it's equal to -1 it means file is present in download dir
-                    var tr = progressBar.closest('tr');
-                    var file = tr.attr('file');
-                    tr.addClass('success');
-                    tr.find('td:last-child').empty();
-                    tr.find('td:last-child').append('<button type="button" class="btn btn-small btn-success disabled"><span class="glyphicon glyphicon-save">&nbsp;Download</span></button>');
-                    // notify user that the download is complete
-                    addNotification(file + ' just complete.', 'alert-success');
+                if (data != '') {
+                    if (data == 'DOWNLOADED') {
+                        toFinish(progressBar.closest('td'));
+                    } else if (data != 'PENDING') {
+                        data = JSON.parse(data);
+                        progressBar.attr('aria-valuenow', data.s);
+                        var percent = 100 * data.s / data.t;
+                        progressBar.css('width', percent + '%');
+                        progressBar.find('span').html('&nbsp;' + data.h);
+                    }
                 }
             }
         });
     });
     // Check all pending files
     $('.pending').each(function () {
-        console.log('check size for file : ' + $(this).closest('tr').attr('file'));
         var progressBar = $(this);
         $.ajax({
             type: 'GET',
             url: 'size.php',
             data: { file: progressBar.closest('tr').attr('file') },
             success: function (data) {
-                if (data != '' && data != '-1') {
-                    data = JSON.parse(data);
-                    progressBar.removeClass('pending');
-                    progressBar.addClass('downloading');
-                    progressBar.attr('aria-valuenow', data.s);
-                    progressBar.attr('aria-valuemax', data.t);
-                    var percent = 100 * data.s / data.t;
-                    progressBar.css('width', percent + '%');
-                    progressBar.find('span').html('&nbsp;' + data.h);
-                    // notify user that the download starts
-                    addNotification(progressBar.attr('file') + ' just starts.', 'alert-info');
-                } else if (data == '-1') {
-                    // if it's equal to -1 it means file is present in download dir
-                    var tr = progressBar.closest('tr');
-                    var file = tr.attr('file');
-                    tr.addClass('success');
-                    tr.find('td:last-child').empty();
-                    tr.find('td:last-child').append('<button type="button" class="btn btn-small btn-success disabled"><span class="glyphicon glyphicon-save">&nbsp;Download</span></button>');
-                    // notify user that the download is complete
-                    addNotification(file + ' just complete.', 'alert-success');
+                if (data != '') {
+                    if (data == 'DOWNLOADED') {
+                        toFinish(progressBar.closest('td'));
+                    } else if (data != 'PENDING') {
+                        toDownloading(progressBar, data);
+                    }
                 }
             }
         });

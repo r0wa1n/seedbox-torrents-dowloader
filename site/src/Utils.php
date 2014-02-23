@@ -183,9 +183,14 @@ function sendMail($text, $subject)
     }
 }
 
+/**
+ * Function used to know file size (octet)
+ * @param $file
+ * @return string
+ */
 function getFileSize($file)
 {
-    return shell_exec('du -sk ' . $file . ' | awk \'{print$1}\'') * 1024;
+    return shell_exec('du -sk "' . $file . '" | awk \'{print$1}\'') * 1024;
 }
 
 /**
@@ -219,4 +224,50 @@ function octetsToSize($octets, $precision = 2)
     } else {
         return $octets . ' O';
     }
+}
+
+function computeChildren($children, $dir = '')
+{
+    $torrents = array();
+    foreach ($children as $fileDetail) {
+        if ($fileDetail['name'] != 'recycle_bin') {
+            // 4 cases :
+            //  - File/Dir can be downloaded
+            //  - File/Dir is already downloaded
+            //  - File/Dir is pending to be downloaded
+            //  - File/Dir is pending and is being downloaded
+            // status can be (DOWNLOADED, PENDING, DOWNLOADING, NONE)
+            $status = 'NONE';
+            $detailsStatus = array();
+            $fileSize = $fileDetail['size'];
+            if (file_exists(TEMP_DIR . 'pending/' . $dir . $fileDetail['name'])) {
+                // File is pending, check if download is started or not
+                if (file_exists(DOWNLOAD_DIRECTORY . $dir . $fileDetail['name'])) {
+                    $status = 'DOWNLOADING';
+                    $currentSize = getFileSize(DOWNLOAD_DIRECTORY . $dir . $fileDetail['name']);
+                    $detailsStatus = array(
+                        'currentSize' => $currentSize,
+                        'currentPercent' => 100 * $currentSize / $fileSize
+                    );
+                } else {
+                    $status = 'PENDING';
+                }
+            } else if (file_exists(DOWNLOAD_DIRECTORY . $dir . $fileDetail['name'])) {
+                // File is downloaded
+                $status = 'DOWNLOADED';
+            }
+            $fileNameEncoded = urlencode($fileDetail['name']);
+
+            $torrents[] = array(
+                'status' => $status,
+                'detailsStatus' => $detailsStatus,
+                'size' => $fileSize,
+                'name' => $fileDetail['name'],
+                'encodedName' => $fileNameEncoded,
+                'isDirectory' => $fileDetail['type'] === 'directory'
+            );
+        }
+    }
+
+    return $torrents;
 }

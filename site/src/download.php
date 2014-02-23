@@ -12,9 +12,10 @@ if (isset($argv)) {
         $filesDetails = json_decode(file_get_contents(TEMP_DIR . SEEDBOX_DETAILS_FILE), true);
         $begin = round(microtime(true));
 
+        $pendingFiles = buildPendingFiles($filesDetails[$file]);
         $ftp = createFTPConnection();
         if ($ftp) {
-            downloadFile($ftp, $filesDetails[$file]);
+            downloadFile($ftp, $pendingFiles);
         }
         ftp_close($ftp);
         $end = round(microtime(true));
@@ -33,15 +34,42 @@ if (isset($argv)) {
     }
 }
 
-function downloadFile($ftp, $fileDetails, $dir = '')
+function buildPendingFiles($fileDetails, $dir = '')
 {
     if ($fileDetails['type'] === 'directory') {
-        mkdir(DOWNLOAD_DIRECTORY . $dir . '/' . $fileDetails['name'], 0755, true);
+        // Create pending directory
+        mkdir(TEMP_DIR . 'pending/' . $dir . '/' . $fileDetails['name'], 0755, true);
+        $children = array();
         foreach ($fileDetails['children'] as $child) {
-            downloadFile($ftp, $child, $dir . '/' . $fileDetails['name']);
+            $children[] = buildPendingFiles($child, $dir . '/' . $fileDetails['name']);
         }
+        return array(
+            'type' => 'directory',
+            'name' => $dir . '/' . $fileDetails['name'],
+            'children' => $children
+        );
     } else {
-        ftp_get($ftp, DOWNLOAD_DIRECTORY . $dir . '/' . $fileDetails['name'], $dir . '/' . $fileDetails['name'], FTP_BINARY);
-        chmod(DOWNLOAD_DIRECTORY . $dir . '/' . $fileDetails['name'], 0644);
+        touch(TEMP_DIR . 'pending/' . $dir . '/' . $fileDetails['name']);
+        return array(
+            'type' => 'file',
+            'name' => $dir . '/' . $fileDetails['name']
+        );
+    }
+}
+
+function downloadFile($ftp, $pendingFiles)
+{
+    if ($pendingFiles['type'] === 'directory') {
+        mkdir(DOWNLOAD_DIRECTORY . $pendingFiles['name'], 0755, true);
+        foreach ($pendingFiles['children'] as $child) {
+            downloadFile($ftp, $child);
+        }
+        // Delete pending directory
+        rmdir(TEMP_DIR . 'pending/' . $pendingFiles['name']);
+    } else {
+        ftp_get($ftp, DOWNLOAD_DIRECTORY . $pendingFiles['name'], $pendingFiles['name'], FTP_BINARY);
+        chmod(DOWNLOAD_DIRECTORY . $pendingFiles['name'], 0644);
+        // Delete pending file
+        unlink(TEMP_DIR . 'pending/' . $pendingFiles['name']);
     }
 }
