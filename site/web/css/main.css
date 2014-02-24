@@ -1,6 +1,6 @@
 body { padding-top: 50px; }
 #main-information tr td:last-child { padding-left: 15px; }
-#footer { text-align: right; color: #777777; font-size: .8em; }
+#footer { text-align: right; color: #777777; font-size: .8em; padding-right: 5px; }
 .italic { font-style:italic }
 .progress { border: 1px solid #000000; margin-bottom: 0; height: 34px; position: relative; background-image: none; background-color: #8D8D8D; }
 .progress span { position: absolute; text-align: center; width: 100%; left: 0; color: #ffffff; line-height: 28px; font-size: 14px; }
