@@ -258,8 +258,6 @@ function initTableSorter() {
                 filter: false
             }
         } });
-    // By default put focus on search-filter
-    $('.tablesorter-filter').focus();
 }
 
 /**

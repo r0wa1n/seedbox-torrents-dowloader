@@ -46,34 +46,27 @@
 {if isset($header.lastUpdate) and isset($header.diskInfo)}
 <div class="panel panel-default" {if not $header.isSeedboxInitialized and $header.currentPage ne 'SETTINGS'}style="margin-top: 20px;"{/if}>
     <div class="panel-body">
-        <div class="pull-left">
-            <table id="main-information">
-                <tr>
-                    <td>Last update</td>
-                    <td>
-                        <span class="badge">{$header.lastUpdate}</span>
-                        <span class="glyphicon glyphicon-refresh"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Disk info</td>
-                    <td>
-                        <div class="progress progress-striped" id="progress-disk-size">
-                            <div class="progress-bar progress-bar-{$header.diskInfo.progressClass}" role="progressbar"
-                                 aria-valuenow="${$header.diskInfo.totalSizeUsed}" aria-valuemin="0"
-                                 aria-valuemax="${$header.diskInfo.totalSize}"
-                                 style="width: {$header.diskInfo.totalPercentSizeUsed}%;"></div>
-                            <span>&nbsp;{convert_octet_to_human_readable_size size={$header.diskInfo.totalSizeUsed}} / {convert_octet_to_human_readable_size size={$header.diskInfo.totalSize}}&nbsp;</span>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div class="pull-right">
-            <button type="button" class="btn btn-small btn-info {if not $header.isSeedboxInitialized}disabled{/if}" id="update" style="color: white;"><span
-                        class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;Update
-            </button>
-        </div>
+        <table id="main-information">
+            <tr>
+                <td>Last update</td>
+                <td>
+                    <span class="label label-default" style="background-color: #8D8D8D; font-weight: inherit; border: 1px solid #000000; font-size: inherit;">{$header.lastUpdate}</span>
+                    <span id="update" class="glyphicon glyphicon-refresh" style="cursor: pointer; font-size: 1.2em; margin-left: 5px;"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>Disk info</td>
+                <td>
+                    <div class="progress progress-striped" id="progress-disk-size">
+                        <div class="progress-bar progress-bar-{$header.diskInfo.progressClass}" role="progressbar"
+                             aria-valuenow="${$header.diskInfo.totalSizeUsed}" aria-valuemin="0"
+                             aria-valuemax="${$header.diskInfo.totalSize}"
+                             style="width: {$header.diskInfo.totalPercentSizeUsed}%;"></div>
+                        <span>&nbsp;{convert_octet_to_human_readable_size size={$header.diskInfo.totalSizeUsed}} / {convert_octet_to_human_readable_size size={$header.diskInfo.totalSize}}&nbsp;</span>
+                    </div>
+                </td>
+            </tr>
+        </table>
     </div>
 </div>
 {/if}

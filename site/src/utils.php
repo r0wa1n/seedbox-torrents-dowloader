@@ -305,5 +305,5 @@ function addLog($lvl, $text, $file)
 {
     $logFile = $file . '-' . date('Y-m-d') . '.log';
     $text = '[' . $lvl . '] ' . date(DATE_PATTERN) . ' : ' . $text;
-    file_put_contents(LOGS_DIRECTORY . $logFile, $text, FILE_APPEND . "\n");
+    file_put_contents(LOGS_DIRECTORY . $logFile, $text . "\n", FILE_APPEND);
 }

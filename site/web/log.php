@@ -12,6 +12,7 @@ if (empty($file) || !file_exists(LOGS_DIRECTORY . $file)) {
 $smarty = new Smarty();
 initSmarty($smarty, 'LOGS');
 
+$smarty->assign('title', $file);
 $smarty->assign('logDetails', file_get_contents(LOGS_DIRECTORY . $file));
 
 $smarty->display('log.tpl');
