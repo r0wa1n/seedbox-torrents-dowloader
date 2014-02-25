@@ -1,7 +1,7 @@
 <?php
 
 /** WEBSITE */
-const WEBSITE_TITLE = 'R0wa1n\'s Torrents Downloader';
+const WEBSITE_TITLE = 'Torrents Downloader';
 const WEBSITE_FOOTER = '&copy;%s romain-chabernaud.com';
 const DATE_PATTERN = 'd/m/Y H:i';
 

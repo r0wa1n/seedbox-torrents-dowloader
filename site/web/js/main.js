@@ -156,7 +156,7 @@ function toDownloading(progressBar, data) {
     progressBar.css('width', percent + '%');
     progressBar.find('span').html('&nbsp;' + data.h);
     // notify user that the download starts
-    addNotification(file + ' just starts.', 'alert-info');
+    addNotification(file + ' just starts.', 'info');
 }
 
 function toFinish(td) {
@@ -166,7 +166,7 @@ function toFinish(td) {
     tr.find('td:last-child').prev().empty();
     tr.find('td:last-child').prev().append('<button type="button" class="btn btn-small btn-success disabled"><span class="glyphicon glyphicon-save">&nbsp;Download</span></button>');
     // notify user that the download is complete
-    addNotification(file + ' just complete.', 'alert-success');
+    addNotification(file + ' just complete.', 'success');
 }
 
 /**
@@ -340,11 +340,11 @@ function initMailingForm(enabled) {
 /**
  * Function used to add a new notification on the top of the screen
  * @param text test to display
- * @param classAlert (alert-success, alert-info, ...)
+ * @param classAlert (success, info, ...)
  */
 function addNotification(text, classAlert) {
     var div = $('<div/>', {
-        class: 'alert ' + classAlert,
+        class: 'notification notification-' + classAlert,
         text: text,
         style: 'display: none;'
     });

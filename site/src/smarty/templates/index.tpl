@@ -1,6 +1,5 @@
 {extends file='layout.tpl'}
 {block name=content}
-    <div id="notifications"></div>
     <table class="table table-striped" id="torrents-list">
         <thead>
             <tr>

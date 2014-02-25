@@ -39,6 +39,7 @@
             Your seedbox information has not been set. Go to settings to set them. <a href="settings.php"><span class="glyphicon glyphicon-cog"></span></a>
         </div>
     {/if}
+    <div id="notifications"></div>
 </nav>
 
 {if isset($header.lastUpdate) and isset($header.diskInfo)}
