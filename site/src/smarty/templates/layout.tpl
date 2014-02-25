@@ -9,6 +9,7 @@
     <link href="css/theme.bootstrap.css" rel="stylesheet" media="screen">
     <link href="css/docs.min.css" rel="stylesheet" media="screen">
     <link href="css/main.css" rel="stylesheet" media="screen">
+    <link rel="icon" type="image/png" href="img/favicon.png" />
 </head>
 <body>
 
@@ -51,6 +52,7 @@
                     <td>Last update</td>
                     <td>
                         <span class="badge">{$header.lastUpdate}</span>
+                        <span class="glyphicon glyphicon-refresh"></span>
                     </td>
                 </tr>
                 <tr>
