@@ -56,8 +56,8 @@
                 <tr>
                     <td>Disk info</td>
                     <td>
-                        <div class="progress" id="progress-disk-size">
-                            <div class="progress-bar" role="progressbar"
+                        <div class="progress progress-striped" id="progress-disk-size">
+                            <div class="progress-bar progress-bar-{$header.diskInfo.progressClass}" role="progressbar"
                                  aria-valuenow="${$header.diskInfo.totalSizeUsed}" aria-valuemin="0"
                                  aria-valuemax="${$header.diskInfo.totalSize}"
                                  style="width: {$header.diskInfo.totalPercentSizeUsed}%;"></div>

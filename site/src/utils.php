@@ -26,13 +26,21 @@ function initSmarty($smarty, $currentPage, $diskInfo = true)
         $sizeUsed = $diskInfo[4] * 1024;
         $percent = 100 * $sizeUsed / $sizeTotal;
         $sizeLeft = $sizeTotal - $sizeUsed;
+        if($percent > 90) {
+            $progressClass = 'danger';
+        } else if ($percent > 70) {
+            $progressClass = 'warning';
+        } else {
+            $progressClass = 'success';
+        }
 
         $header['lastUpdate'] = date(DATE_PATTERN, file_get_contents(TEMP_DIR . LAST_UPDATE_FILE));
         $header['diskInfo'] = array(
             'totalSize' => $sizeTotal,
             'totalSizeUsed' => $sizeUsed,
             'totalPercentSizeUsed' => $percent,
-            'totalSizeLeft' => $sizeLeft
+            'totalSizeLeft' => $sizeLeft,
+            'progressClass' => $progressClass
         );
     }
 
