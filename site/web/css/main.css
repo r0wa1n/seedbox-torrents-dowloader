@@ -34,6 +34,7 @@ div#loading {
     display: none;
     opacity: 0;
     height: 100%;
+    z-index: 5000;
 }
 div#loading span {
     margin-top: 70px;
@@ -42,10 +43,22 @@ div#loading span {
     font-size: 2.2em;
     color: white;
 }
-div#notifications div.alert {
-    margin: 10px;
+div#notifications div.notification {
+    padding: 3px 10px;
+    text-align: center;
+    border-bottom: 1px solid transparent;
 }
-div#notifications div.alert span.glyphicon-remove {
+div#notifications div.notification-success {
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+    color: #3c763d;
+}
+div#notifications div.notification-info {
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+    color: #31708f;
+}
+div#notifications div.notification span.glyphicon-remove {
     cursor: pointer;
     float: right;
     line-height: 16px;

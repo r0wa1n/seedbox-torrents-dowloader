@@ -26,13 +26,21 @@ function initSmarty($smarty, $currentPage, $diskInfo = true)
         $sizeUsed = $diskInfo[4] * 1024;
         $percent = 100 * $sizeUsed / $sizeTotal;
         $sizeLeft = $sizeTotal - $sizeUsed;
+        if($percent > 90) {
+            $progressClass = 'danger';
+        } else if ($percent > 70) {
+            $progressClass = 'warning';
+        } else {
+            $progressClass = 'success';
+        }
 
         $header['lastUpdate'] = date(DATE_PATTERN, file_get_contents(TEMP_DIR . LAST_UPDATE_FILE));
         $header['diskInfo'] = array(
             'totalSize' => $sizeTotal,
             'totalSizeUsed' => $sizeUsed,
             'totalPercentSizeUsed' => $percent,
-            'totalSizeLeft' => $sizeLeft
+            'totalSizeLeft' => $sizeLeft,
+            'progressClass' => $progressClass
         );
     }
 
@@ -89,15 +97,18 @@ function createFTPConnection()
         if (empty($settings['seedbox']) || empty($settings['seedbox']['host']) || empty($settings['seedbox']['username'])
             || empty($settings['seedbox']['password'])
         ) {
+            addLog('ERROR', 'No setting file found.', 'ftp');
             return false;
         } else {
             // Connect to seedbox with SSL
             $ftp = ftp_ssl_connect($settings['seedbox']['host'], intval($settings['seedbox']['port']));
             if (!$ftp) {
+                addLog('ERROR', 'Wrong FTP host.', 'ftp');
                 return false;
             }
             // Log with information set on settings screen
             if (!ftp_login($ftp, $settings['seedbox']['username'], $settings['seedbox']['password'])) {
+                addLog('ERROR', 'Wrong FTP login or password.', 'ftp');
                 return false;
             };
 
@@ -105,10 +116,12 @@ function createFTPConnection()
             if (ftp_pasv($ftp, true)) {
                 return $ftp;
             } else {
+                addLog('ERROR', 'Unable to switch to passive mode.', 'ftp');
                 return false;
             }
         }
     } else {
+        addLog('ERROR', 'No setting file found to create ftp connection.', 'ftp');
         return false;
     }
 }
@@ -156,9 +169,10 @@ function sendMail($text, $subject)
         if (empty($settings['mailing']) || empty($settings['mailing']['smtpHost']) ||
             empty($settings['mailing']['username']) || empty($settings['mailing']['password'])
         ) {
+            addLog('WARNING', 'Mailing configuration is not set', 'mailing');
             return false;
         } else {
-            $mail = new PHPMailer;
+            $mail = new PHPMailer(true);
 
             $mail->isSMTP();
             $mail->Host = $settings['mailing']['smtpHost'];
@@ -176,9 +190,24 @@ function sendMail($text, $subject)
             $mail->Subject = $subject;
             $mail->Body = $text;
 
-            return !$mail->send();
+            try {
+                if(!$mail->send()) {
+                    addLog('ERROR', 'Unable to send mail.', 'mailing');
+                    return false;
+                } else {
+                    addLog('SUCCESS', 'Mail has been sent', 'mailing');
+                    return true;
+                }
+            } catch (phpmailerException $e) {
+                addLog('ERROR', 'Unable to send mail. Details : ' . $e->getMessage(), 'mailing');
+                return false;
+            } catch (Exception $e) {
+                addLog('ERROR', 'Unable to send mail. Details : ' . $e->getMessage(), 'mailing');
+                return false;
+            }
         }
     } else {
+        addLog('WARNING', 'Mailing configuration is not set', 'mailing');
         return false;
     }
 }
@@ -270,4 +299,11 @@ function computeChildren($children, $dir = '')
     }
 
     return $torrents;
+}
+
+function addLog($lvl, $text, $file)
+{
+    $logFile = $file . '-' . date('Y-m-d') . '.log';
+    $text = '[' . $lvl . '] ' . date(DATE_PATTERN) . ' : ' . $text;
+    file_put_contents(LOGS_DIRECTORY . $logFile, $text . "\n", FILE_APPEND);
 }
