@@ -9,20 +9,38 @@ if (isset($argv)) {
         addLog('ERROR', 'Empty file cannot be downloaded', 'download');
         http_response_code(400);
     } else {
-        $file = urldecode($file);
+        $decodedFile = urldecode($file);
 
         $filesDetails = json_decode(file_get_contents(TEMP_DIR . SEEDBOX_DETAILS_FILE), true);
         $begin = round(microtime(true));
 
-        $pendingFiles = buildPendingFiles($filesDetails[$file]);
+        $pathFile = explode('/', $decodedFile);
+        $fileDetails = searchFile($pathFile, 0, $filesDetails);
+        array_pop($pathFile);
+
+        // Prepare pending directories
+        $previous = TEMP_DIR . 'pending/';
+        foreach ($pathFile as $dirToCreate) {
+            mkdir($previous . $dirToCreate, 0755, true);
+            $previous .= $dirToCreate . '/';
+        }
+        $pendingFiles = buildPendingFiles($fileDetails, implode($pathFile, '/'));
+
         $ftp = createFTPConnection();
         if ($ftp) {
             downloadFile($ftp, $pendingFiles);
+            // Delete pending directories
+            $pathFile = array_reverse($pathFile);
+            foreach ($pathFile as $dirToDelete) {
+                rmdir(TEMP_DIR . 'pending/' . $dirToDelete);
+                $previous .= $dirToDelete . '/';
+            }
         }
         ftp_close($ftp);
+
         $end = round(microtime(true));
 
-        $sizeOctet = $filesDetails[$file]['size'];
+        $sizeOctet = $fileDetails['size'];
         $duration = $end - $begin;
         $average = $sizeOctet / ($duration / 1000);
         $size = octetsToSize($sizeOctet);
