@@ -26,7 +26,7 @@ function initSmarty($smarty, $currentPage, $diskInfo = true)
         $sizeUsed = $diskInfo[4] * 1024;
         $percent = 100 * $sizeUsed / $sizeTotal;
         $sizeLeft = $sizeTotal - $sizeUsed;
-        if($percent > 90) {
+        if ($percent > 90) {
             $progressClass = 'danger';
         } else if ($percent > 70) {
             $progressClass = 'warning';
@@ -191,7 +191,7 @@ function sendMail($text, $subject)
             $mail->Body = $text;
 
             try {
-                if(!$mail->send()) {
+                if (!$mail->send()) {
                     addLog('ERROR', 'Unable to send mail.', 'mailing');
                     return false;
                 } else {
@@ -252,6 +252,16 @@ function octetsToSize($octets, $precision = 2)
         return round($octets / $teraoctet, $precision) . ' To';
     } else {
         return $octets . ' O';
+    }
+}
+
+function searchFile($filePath, $currentPathKey, $files)
+{
+    // Check if currentPath is the last one of $filePath
+    if ($currentPathKey == (count($filePath) - 1)) {
+        return $files[$filePath[$currentPathKey]];
+    } else {
+        return searchFile($filePath, ($currentPathKey + 1), $files[$filePath[$currentPathKey]]['children']);
     }
 }
 

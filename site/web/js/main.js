@@ -2,13 +2,16 @@ $(document).ready(initTableSorter);
 $(document).ready(initTorrentChildren);
 $(document).ready(initButtonsEvent);
 $(document).ready(initSettings);
+$(document).ready(cron);
 
 /**
  * Function used to init event on download buttons and upload button
  */
 function initButtonsEvent() {
     // Link download buttons
-    $('.download').click(function () {
+    var downloadFiles = $('.download');
+    downloadFiles.off('click');
+    downloadFiles.click(function () {
         var tdLine = $(this).parent();
         $.ajax({
             type: 'POST',
@@ -24,7 +27,9 @@ function initButtonsEvent() {
         });
     });
     // Link update button
-    $('#update').click(function () {
+    var updateFiles = $('#update');
+    updateFiles.off('click');
+    updateFiles.click(function () {
         // display loading screen
         var loading = $('div#loading');
         loading.css('height', $(document).height());
@@ -44,15 +49,47 @@ function initButtonsEvent() {
         });
     });
     // Link delete button
-    $('.delete').click(function () {
+    var deleteFiles = $('.delete');
+    deleteFiles.off('click');
+    deleteFiles.click(function () {
         var file = $(this).closest('tr').attr('file');
         $('#delete-file-input').val(file);
         $('#delete-popup-content').html('Are you sure to delete this file on your seedbox : ' + file);
-        $('#delete-popup').modal();
+        $('#delete-popup').modal('show');
     });
-    $('#delete-button').click(function () {
-        alert('TODO');
+    var deleteButton = $('#delete-button');
+    deleteButton.off('click');
+    deleteButton.click(function () {
+        // display loading screen
+        var loading = $('div#loading');
+        loading.css('height', $(document).height());
+        loading.show();
+        loading.animate({opacity: '0.6'}, 500, function () {
+            $.ajax({
+                type: 'POST',
+                url: 'delete.php',
+                data: {file: $('#delete-file-input').val()},
+                success: function () {
+                    // Call update now
+                    $.ajax({
+                        type: 'GET',
+                        url: 'update.php',
+                        success: function () {
+                            // Remove loading screen and redirect to home page
+                            $('div#loading').animate({opacity: '0'}, 500, function () {
+                                $('div#loading').hide();
+                                $('#delete-popup').modal('hide');
+                                window.location.href = 'index.php';
+                            });
+                        }
+                    });
+                }
+            });
+        });
     })
+}
+
+function cron() {
     // Put timer in order to update size of current downloading files
     setInterval(updateDownloadedFiles, 2000);
 }
@@ -86,6 +123,8 @@ function initTorrentChildren() {
             success: function (data) {
                 parentTr.after(data);
                 initTorrentChildren();
+                // Add button event
+                initButtonsEvent();
                 // Add remove children on parent click
                 parent.click(function () {
                     removeChildren(file);
