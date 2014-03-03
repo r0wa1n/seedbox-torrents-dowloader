@@ -3,8 +3,8 @@
     <table class="table table-striped" id="torrents-list">
         <thead>
             <tr>
-                <th style="width: 100%;">File</th>
-                <th>Size</th>
+                <th style="width: 90%;">File</th>
+                <th style="width: 10%;">Size</th>
                 <th></th>
                 <th></th>
             </tr>

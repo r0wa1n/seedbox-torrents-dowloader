@@ -3,7 +3,7 @@
 /** WEBSITE */
 const WEBSITE_TITLE = 'Torrents Downloader';
 const WEBSITE_FOOTER = '&copy;%s romain-chabernaud.com';
-const DATE_PATTERN = 'd/m/Y H:i';
+const DATE_PATTERN = 'd/m/Y H:i:s';
 
 const ROOT_SERVER_DIRECTORY = '/'; // Used to know the free available space
 const LOGS_DIRECTORY = '../logs/';

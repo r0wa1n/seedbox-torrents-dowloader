@@ -152,7 +152,7 @@ function sendCompleteMail($parameters)
     $smarty->assign('footer', sprintf(WEBSITE_FOOTER, date('Y')));
     $output = $smarty->fetch('mail-download-complete.tpl');
 
-    sendMail($output, $subject);
+    return sendMail($output, $subject);
 }
 
 /**
@@ -313,7 +313,7 @@ function computeChildren($children, $dir = '')
 
 function addLog($lvl, $text, $file)
 {
-    $logFile = $file . '-' . date('Y-m-d') . '.log';
+    $logFile = date('Y-m-d') . '-' . $file . '.log';
     $text = '[' . $lvl . '] ' . date(DATE_PATTERN) . ' : ' . $text;
     file_put_contents(LOGS_DIRECTORY . $logFile, $text . "\n", FILE_APPEND);
 }

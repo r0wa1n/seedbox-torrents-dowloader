@@ -41,19 +41,25 @@ if (isset($argv)) {
         $end = round(microtime(true));
 
         $sizeOctet = $fileDetails['size'];
+        $beginDateTime = new DateTime();
+        $beginDateTime->setTimestamp($begin);
+        $endDateTime = new DateTime();
+        $endDateTime->setTimestamp($end);
+        $interval = $beginDateTime->diff($endDateTime);
         $duration = $end - $begin;
-        $average = $sizeOctet / ($duration / 1000);
+        $average = $sizeOctet / $duration;
         $size = octetsToSize($sizeOctet);
 
-//        sendCompleteMail(array(
-//            'file' => $file,
-//            'size' => $size,
-//            'begin' => date(DATE_PATTERN, $begin),
-//            'end' => date(DATE_PATTERN, $end),
-//            'duration' => $duration,
-//            'average' => octetsToSize($average)
-//        ));
-        addLog('SUCCESS', 'File ' . $file . ' downloaded (' . $size . ')', 'download');
+        if(sendCompleteMail(array(
+            'file' => $file,
+            'size' => $size,
+            'begin' => date(DATE_PATTERN, $begin),
+            'end' => date(DATE_PATTERN, $end),
+            'duration' => ($interval->h < 10 ? ('0' . $interval->h) : $interval->h) . 'h' . ($interval->m < 10 ? ('0' . $interval->m) : $interval->m) . 'm' . ($interval->s < 10 ? ('0' . $interval->s) : $interval->s) . 's',
+            'average' => octetsToSize($average)
+        ))) {
+            addLog('SUCCESS', 'File ' . $file . ' downloaded (' . $size . ')', 'download');
+        }
     }
 } else {
     addLog('ERROR', 'No param found to download a file', 'download');
