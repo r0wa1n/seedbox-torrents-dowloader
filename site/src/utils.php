@@ -20,12 +20,11 @@ function initSmarty($smarty, $currentPage, $diskInfo = true)
 
     if ($diskInfo) {
         /* DISK SIZE INFO */
-        $diskInfo = shell_exec('df -k ' . ROOT_SERVER_DIRECTORY . ' | awk \'NR==2\'');
-        $diskInfo = explode(' ', $diskInfo);
-        $sizeTotal = $diskInfo[3] * 1024;
-        $sizeUsed = $diskInfo[4] * 1024;
+        $sizeTotal = disk_total_space(ROOT_SERVER_DIRECTORY);
+        $sizeLeft = disk_free_space(ROOT_SERVER_DIRECTORY);
+        $sizeUsed = $sizeTotal - $sizeLeft;
+
         $percent = 100 * $sizeUsed / $sizeTotal;
-        $sizeLeft = $sizeTotal - $sizeUsed;
         if ($percent > 90) {
             $progressClass = 'danger';
         } else if ($percent > 70) {
