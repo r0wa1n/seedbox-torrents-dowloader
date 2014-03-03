@@ -3,9 +3,9 @@
     <table class="table table-striped" id="torrents-list">
         <thead>
             <tr>
-                <th>Torrent name</th>
+                <th style="width: 100%;">File</th>
                 <th>Size</th>
-                <th style="width: 100px;"></th>
+                <th></th>
                 <th></th>
             </tr>
         </thead>

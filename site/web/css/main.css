@@ -70,12 +70,13 @@ div#loading img {
 .small-screen {
     display: none;
 }
-@media screen and (max-width: 768px) {
+td { vertical-align: inherit !important; }
+@media screen and (max-width: 980px) {
     body { padding-top: 0; }
-    .download span {
-        display: none;
-    }
-    .small-screen {
-        display: inherit !important;
-    }
+}
+@media screen and (min-width: 980px) {
+    div#content { margin-top: 20px; }
+}
+@media screen and (max-width: 768px) {
+    div#content { margin: 0 -20px; }
 }
