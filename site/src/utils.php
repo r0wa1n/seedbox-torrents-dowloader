@@ -92,6 +92,7 @@ function initDownloadDirectory() {
         $settings['downloadDirectory'] = realpath(getcwd() . '/../src/download');
 
         file_put_contents(TEMP_DIR . SETTINGS_FILE, json_encode($settings));
+        chmod(TEMP_DIR . SETTINGS_FILE, 0600);
     } else {
         if(touch(TEMP_DIR . SETTINGS_FILE)) {
             initDownloadDirectory();

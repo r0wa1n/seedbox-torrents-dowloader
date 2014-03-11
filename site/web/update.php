@@ -131,9 +131,11 @@ if ($ftp) {
 
     // write content on file
     file_put_contents(TEMP_DIR . SEEDBOX_DETAILS_FILE, json_encode($output));
+    chmod(TEMP_DIR . SEEDBOX_DETAILS_FILE, 0600);
 
     ftp_close($ftp);
 
     // Update last update file
     file_put_contents(TEMP_DIR . LAST_UPDATE_FILE, round(microtime(true)));
+    chmod(TEMP_DIR . LAST_UPDATE_FILE, 0600);
 }

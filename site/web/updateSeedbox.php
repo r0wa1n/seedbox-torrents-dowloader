@@ -22,6 +22,7 @@ if (empty($seedboxHost) || empty($seedboxUsername) || empty($seedboxPassword) ||
     );
 
     file_put_contents(TEMP_DIR . SETTINGS_FILE, json_encode($settings));
+    chmod(TEMP_DIR . SETTINGS_FILE, 0600);
 
     header('Location: settings.php?successSeedbox=true#seedbox');
 }

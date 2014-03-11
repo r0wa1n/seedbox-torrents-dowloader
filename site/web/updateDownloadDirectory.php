@@ -13,6 +13,7 @@ if (empty($downloadDirectory)) {
     $settings['downloadDirectory'] = $downloadDirectory;
 
     file_put_contents(TEMP_DIR . SETTINGS_FILE, json_encode($settings));
+    chmod(TEMP_DIR . SETTINGS_FILE, 0600);
 
     header('Location: settings.php?successDownloadDir=true#download-directory');
 }
