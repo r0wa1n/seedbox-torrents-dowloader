@@ -7,7 +7,7 @@ $smarty = new Smarty();
 initSmarty($smarty, 'HOME');
 
 $filesDetails = json_decode(file_get_contents(TEMP_DIR . SEEDBOX_DETAILS_FILE), true);
-$torrents = computeChildren($filesDetails);
+$torrents = computeChildren($filesDetails, getDownloadDirectory());
 
 $smarty->assign('torrents', $torrents);
 $smarty->assign('level', 0);

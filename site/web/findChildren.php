@@ -21,7 +21,7 @@ $filesDetails = json_decode(file_get_contents(TEMP_DIR . SEEDBOX_DETAILS_FILE), 
 $file = $_GET['file'];
 $decodedFile = urldecode($file);
 $pathFile = explode('/', $decodedFile);
-$torrents = computeChildren(searchChildren($pathFile, 0, $filesDetails), $decodedFile . '/');
+$torrents = computeChildren(searchChildren($pathFile, 0, $filesDetails), getDownloadDirectory(), $decodedFile . '/');
 
 $smarty->assign('torrents', $torrents);
 $smarty->assign('parent', $file);

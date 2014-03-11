@@ -125,5 +125,41 @@
                 </form>
             </div>
         </div>
+        <div id="download-directory" class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title">Download directory</h3>
+            </div>
+            <div class="panel-body">
+                <div class="bs-callout bs-callout-warning">
+                    <h4>Warning</h4>
+                    <p>Make sur your selected download directory is allowed to be written by "other group".</p>
+                </div>
+                {if $errorDownloadDir}
+                    <div class="bs-callout bs-callout-danger">
+                        <h4>Error</h4>
+                        <p>Some fields are invalids.</p>
+                    </div>
+                {elseif $successDownloadDir}
+                    <div class="bs-callout bs-callout-info">
+                        <h4>Success</h4>
+                        <p>Your download directory has been saved.</p>
+                    </div>
+                {/if}
+                <form class="form-horizontal" role="form" action="updateDownloadDirectory.php" method="post">
+                    <div class="form-group">
+                        <label for="inputDownloadDirectory" class="col-sm-2 control-label">Download Directory</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="inputDownloadDirectory" name="inputDownloadDirectory" value="{$downloadDirectory}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-floppy-disk">&nbsp;Update</span></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 {/block}

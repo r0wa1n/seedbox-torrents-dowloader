@@ -28,7 +28,15 @@ if (file_exists(TEMP_DIR . SETTINGS_FILE)) {
             'recipient' => $settings['mailing']['recipient']
         ));
     }
+
+    if(empty($settings['downloadDirectory'])) {
+        initDownloadDirectory();
+    }
+} else {
+    initDownloadDirectory();
 }
+
+$smarty->assign('downloadDirectory', getDownloadDirectory());
 
 if (!empty($_GET['errorSeedbox'])) {
     $smarty->assign('errorSeedbox', true);
@@ -44,6 +52,14 @@ if (!empty($_GET['errorMailing'])) {
 
 if (!empty($_GET['successMailing'])) {
     $smarty->assign('successMailing', true);
+}
+
+if (!empty($_GET['errorDownloadDir'])) {
+    $smarty->assign('errorDownloadDir', true);
+}
+
+if (!empty($_GET['successDownloadDir'])) {
+    $smarty->assign('successDownloadDir', true);
 }
 
 $smarty->display('settings.tpl');

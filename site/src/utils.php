@@ -84,6 +84,34 @@ function isSeedboxInitialized()
 }
 
 /**
+ * Function used to
+ */
+function initDownloadDirectory() {
+    if (file_exists(TEMP_DIR . SETTINGS_FILE)) {
+        $settings = json_decode(file_get_contents(TEMP_DIR . SETTINGS_FILE), true);
+        $settings['downloadDirectory'] = realpath(getcwd() . '/../src/download');
+
+        file_put_contents(TEMP_DIR . SETTINGS_FILE, json_encode($settings));
+    } else {
+        if(touch(TEMP_DIR . SETTINGS_FILE)) {
+            initDownloadDirectory();
+        } else {
+            addLog('ERROR', 'Unable to create settings file on directory ' . TEMP_DIR . SETTINGS_FILE, 'error');
+        }
+    }
+}
+
+/**
+ * Function returning download directory from settings
+ * @return string download directory
+ */
+function getDownloadDirectory() {
+    $settings = json_decode(file_get_contents(TEMP_DIR . SETTINGS_FILE), true);
+
+    return $settings['downloadDirectory'] . '/';
+}
+
+/**
  * Function used to initialize ftp with seedbox information locate in settings file.
  *
  * Return false if settings are not set or invalids
@@ -137,6 +165,7 @@ function createFTPConnection()
  *  <li>duration</li>
  *  <li>average</li>
  * </ul>
+ * @return bool true if everything's good
  */
 function sendCompleteMail($parameters)
 {
@@ -264,7 +293,7 @@ function searchFile($filePath, $currentPathKey, $files)
     }
 }
 
-function computeChildren($children, $dir = '')
+function computeChildren($children, $downloadDirectory, $dir = '')
 {
     $torrents = array();
     foreach ($children as $fileDetail) {
@@ -280,9 +309,9 @@ function computeChildren($children, $dir = '')
             $fileSize = $fileDetail['size'];
             if (file_exists(TEMP_DIR . 'pending/' . $dir . $fileDetail['name'])) {
                 // File is pending, check if download is started or not
-                if (file_exists(DOWNLOAD_DIRECTORY . $dir . $fileDetail['name'])) {
+                if (file_exists($downloadDirectory . $dir . $fileDetail['name'])) {
                     $status = 'DOWNLOADING';
-                    $currentSize = getFileSize(DOWNLOAD_DIRECTORY . $dir . $fileDetail['name']);
+                    $currentSize = getFileSize($downloadDirectory . $dir . $fileDetail['name']);
                     $detailsStatus = array(
                         'currentSize' => $currentSize,
                         'currentPercent' => 100 * $currentSize / $fileSize
@@ -290,7 +319,7 @@ function computeChildren($children, $dir = '')
                 } else {
                     $status = 'PENDING';
                 }
-            } else if (file_exists(DOWNLOAD_DIRECTORY . $dir . $fileDetail['name'])) {
+            } else if (file_exists($downloadDirectory . $dir . $fileDetail['name'])) {
                 // File is downloaded
                 $status = 'DOWNLOADED';
             }

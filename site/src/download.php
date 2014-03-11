@@ -90,16 +90,17 @@ function buildPendingFiles($fileDetails, $dir = '')
 
 function downloadFile($ftp, $pendingFiles)
 {
+    $downloadDirectory = getDownloadDirectory();
     if ($pendingFiles['type'] === 'directory') {
-        mkdir(DOWNLOAD_DIRECTORY . $pendingFiles['name'], 0755, true);
+        mkdir($downloadDirectory . $pendingFiles['name'], 0755, true);
         foreach ($pendingFiles['children'] as $child) {
             downloadFile($ftp, $child);
         }
         // Delete pending directory
         rmdir(TEMP_DIR . 'pending/' . $pendingFiles['name']);
     } else {
-        ftp_get($ftp, DOWNLOAD_DIRECTORY . $pendingFiles['name'], $pendingFiles['name'], FTP_BINARY);
-        chmod(DOWNLOAD_DIRECTORY . $pendingFiles['name'], 0644);
+        ftp_get($ftp, $downloadDirectory . $pendingFiles['name'], $pendingFiles['name'], FTP_BINARY);
+        chmod($downloadDirectory . $pendingFiles['name'], 0644);
         // Delete pending file
         unlink(TEMP_DIR . 'pending/' . $pendingFiles['name']);
     }

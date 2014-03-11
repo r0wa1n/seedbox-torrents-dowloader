@@ -2,12 +2,11 @@
 
 /** WEBSITE */
 const WEBSITE_TITLE = 'Torrents Downloader';
-const WEBSITE_FOOTER = '&copy;%s romain-chabernaud.com';
+const WEBSITE_FOOTER = '&copy;%s Romain CHABERNAUD';
 const DATE_PATTERN = 'd/m/Y H:i:s';
 
 const ROOT_SERVER_DIRECTORY = '/'; // Used to know the free available space
 const LOGS_DIRECTORY = '../logs/';
-const DOWNLOAD_DIRECTORY = '../download/';
 
 const TEMP_DIR = '../temp/';
 const SEEDBOX_DETAILS_FILE = 'seedbox_details_file.json';

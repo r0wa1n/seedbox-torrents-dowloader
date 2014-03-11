@@ -289,7 +289,7 @@ function initTableSorter() {
         },
         sortList: [
             // Default sort is first column asc order
-            [0, 0]
+            [0, 1]
         ],
         headers: {
             1: {
