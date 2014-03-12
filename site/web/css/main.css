@@ -67,9 +67,6 @@ div#loading img {
     display: block;
     margin: 0 auto;
 }
-.small-screen {
-    display: none;
-}
 td { vertical-align: inherit !important; }
 @media screen and (max-width: 980px) {
     body { padding-top: 0; }

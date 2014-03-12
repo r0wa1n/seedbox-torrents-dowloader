@@ -10,11 +10,9 @@ if ($mailingEnabled && (empty($mailingSmtpHost) || empty($mailingUsername) || em
     header('Location: settings.php?errorMailing=true#mailing');
 } else {
     require_once('../src/constants.php');
+    require_once('../src/utils.php');
 
-    $settings = array();
-    if (file_exists(TEMP_DIR . SETTINGS_FILE)) {
-        $settings = json_decode(file_get_contents(TEMP_DIR . SETTINGS_FILE), true);
-    }
+    $settings = getSettings();
 
     $settings['mailing'] = array();
     if ($mailingEnabled) {

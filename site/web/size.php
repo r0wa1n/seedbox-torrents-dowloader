@@ -17,7 +17,7 @@ if (empty($decodedFile)) {
     // File is pending, check if download is started or not
     if (file_exists($downloadDirectory . $decodedFile)) {
         $currentSize = getFileSize($downloadDirectory . $decodedFile);
-        $filesDetails = json_decode(file_get_contents(TEMP_DIR . SEEDBOX_DETAILS_FILE), true);
+        $filesDetails = getSeedboxDetails();
         $pathFile = explode('/', $decodedFile);
         $size = searchSize($pathFile, 0, $filesDetails);
 

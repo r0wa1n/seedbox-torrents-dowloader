@@ -6,35 +6,31 @@ require_once('../src/utils.php');
 $smarty = new Smarty();
 initSmarty($smarty, 'SETTINGS', false);
 
-if (file_exists(TEMP_DIR . SETTINGS_FILE)) {
-    $settings = json_decode(file_get_contents(TEMP_DIR . SETTINGS_FILE), true);
+$settings = getSettings();
+if (!empty($settings['seedbox']) && !empty($settings['seedbox']['host']) && !empty($settings['seedbox']['username'])
+    && !empty($settings['seedbox']['password']) && !empty($settings['seedbox']['port'])) {
+    $smarty->assign('seedbox', array(
+        'host' => $settings['seedbox']['host'],
+        'username' => $settings['seedbox']['username'],
+        'port' => $settings['seedbox']['port']
+    ));
+}
+if (!empty($settings['mailing']) && !empty($settings['mailing']['smtpHost'])
+    && !empty($settings['mailing']['username']) && !empty($settings['mailing']['password']) && !empty($settings['mailing']['recipient'])
+) {
+    $smarty->assign('mailing', array(
+        'smtpHost' => $settings['mailing']['smtpHost'],
+        'smtpPort' => $settings['mailing']['smtpPort'],
+        'ssl' => $settings['mailing']['ssl'],
+        'username' => $settings['mailing']['username'],
+        'recipient' => $settings['mailing']['recipient']
+    ));
+}
 
-    if (!empty($settings['seedbox']) && !empty($settings['seedbox']['host']) && !empty($settings['seedbox']['username'])
-        && !empty($settings['seedbox']['password']) && !empty($settings['seedbox']['port'])) {
-        $smarty->assign('seedbox', array(
-            'host' => $settings['seedbox']['host'],
-            'username' => $settings['seedbox']['username'],
-            'port' => $settings['seedbox']['port']
-        ));
-    }
-    if (!empty($settings['mailing']) && !empty($settings['mailing']['smtpHost'])
-        && !empty($settings['mailing']['username']) && !empty($settings['mailing']['password']) && !empty($settings['mailing']['recipient'])
-    ) {
-        $smarty->assign('mailing', array(
-            'smtpHost' => $settings['mailing']['smtpHost'],
-            'smtpPort' => $settings['mailing']['smtpPort'],
-            'ssl' => $settings['mailing']['ssl'],
-            'username' => $settings['mailing']['username'],
-            'recipient' => $settings['mailing']['recipient']
-        ));
-    }
-
-    if(empty($settings['downloadDirectory'])) {
-        initDownloadDirectory();
-    }
-} else {
+if(empty($settings['downloadDirectory'])) {
     initDownloadDirectory();
 }
+
 
 $smarty->assign('downloadDirectory', getDownloadDirectory());
 

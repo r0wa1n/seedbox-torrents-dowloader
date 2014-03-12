@@ -8,11 +8,9 @@ if (empty($seedboxHost) || empty($seedboxUsername) || empty($seedboxPassword) ||
     header('Location: settings.php?errorSeedbox=true#seedbox');
 } else {
     require_once('../src/constants.php');
+    require_once('../src/utils.php');
 
-    $settings = array();
-    if(file_exists(TEMP_DIR . SETTINGS_FILE)) {
-        $settings = json_decode(file_get_contents(TEMP_DIR . SETTINGS_FILE), true);
-    }
+    $settings = getSettings();
 
     $settings['seedbox'] = array(
         'host' => $seedboxHost,

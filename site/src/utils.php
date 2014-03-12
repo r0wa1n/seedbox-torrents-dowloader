@@ -33,7 +33,16 @@ function initSmarty($smarty, $currentPage, $diskInfo = true)
             $progressClass = 'success';
         }
 
-        $header['lastUpdate'] = date(DATE_PATTERN, file_get_contents(TEMP_DIR . LAST_UPDATE_FILE));
+        if (file_exists(TEMP_DIR . LAST_UPDATE_FILE)) {
+            $lastUpdateTimeStamp = file_get_contents(TEMP_DIR . LAST_UPDATE_FILE);
+            if (is_numeric($lastUpdateTimeStamp)) {
+                $header['lastUpdate'] = date(DATE_PATTERN, $lastUpdateTimeStamp);
+            } else {
+                $header['lastUpdate'] = '-';
+            }
+        } else {
+            $header['lastUpdate'] = '-';
+        }
         $header['diskInfo'] = array(
             'totalSize' => $sizeTotal,
             'totalSizeUsed' => $sizeUsed,
@@ -73,41 +82,74 @@ function initSettingsSmarty($smarty)
  */
 function isSeedboxInitialized()
 {
-    if (file_exists(TEMP_DIR . SETTINGS_FILE)) {
-        $settings = json_decode(file_get_contents(TEMP_DIR . SETTINGS_FILE), true);
+    $settings = getSettings();
 
-        return !(empty($settings['seedbox']) || empty($settings['seedbox']['host']) || empty($settings['seedbox']['username'])
-            || empty($settings['seedbox']['password']));
+    return !(empty($settings['seedbox']) || empty($settings['seedbox']['host']) || empty($settings['seedbox']['username']) || empty($settings['seedbox']['password']));
+}
+
+/**
+ * Function used to retrieve settings parameters
+ *
+ * @return array
+ */
+function getSettings()
+{
+    if (!file_exists(TEMP_DIR . SETTINGS_FILE)) {
+        if (touch(TEMP_DIR . SETTINGS_FILE)) {
+            chmod(TEMP_DIR . SETTINGS_FILE, 0600);
+            initDownloadDirectory();
+        } else {
+            addLog('ERROR', 'Unable to create settings file on directory ' . TEMP_DIR . SETTINGS_FILE, 'error');
+        }
+        return array();
     } else {
-        return false;
+        $settings = json_decode(file_get_contents(TEMP_DIR . SETTINGS_FILE), true);
+        if (!is_array($settings)) {
+            addLog('ERROR', 'It\' seems your settings file are not well formatted.', 'error');
+            return array();
+        } else {
+            return $settings;
+        }
+    }
+}
+
+function getSeedboxDetails() {
+    if (!file_exists(TEMP_DIR . SEEDBOX_DETAILS_FILE)) {
+        if (touch(TEMP_DIR . SEEDBOX_DETAILS_FILE)) {
+            chmod(TEMP_DIR . SEEDBOX_DETAILS_FILE, 0600);
+            file_put_contents(TEMP_DIR . SEEDBOX_DETAILS_FILE, json_encode(array()));
+        } else {
+            addLog('ERROR', 'Unable to create seedbox details file on directory ' . TEMP_DIR . SEEDBOX_DETAILS_FILE, 'error');
+        }
+        return array();
+    } else {
+        $fileDetails = json_decode(file_get_contents(TEMP_DIR . SEEDBOX_DETAILS_FILE), true);
+        if (!is_array($fileDetails)) {
+            addLog('ERROR', 'It\' seems your seedbox details file are not well formatted.', 'error');
+            return array();
+        } else {
+            return $fileDetails;
+        }
     }
 }
 
 /**
  * Function used to
  */
-function initDownloadDirectory() {
-    if (file_exists(TEMP_DIR . SETTINGS_FILE)) {
-        $settings = json_decode(file_get_contents(TEMP_DIR . SETTINGS_FILE), true);
-        $settings['downloadDirectory'] = realpath(getcwd() . '/../src/download');
-
-        file_put_contents(TEMP_DIR . SETTINGS_FILE, json_encode($settings));
-        chmod(TEMP_DIR . SETTINGS_FILE, 0600);
-    } else {
-        if(touch(TEMP_DIR . SETTINGS_FILE)) {
-            initDownloadDirectory();
-        } else {
-            addLog('ERROR', 'Unable to create settings file on directory ' . TEMP_DIR . SETTINGS_FILE, 'error');
-        }
-    }
+function initDownloadDirectory()
+{
+    $settings = getSettings();
+    $settings['downloadDirectory'] = realpath(getcwd() . '/../src/download');
+    file_put_contents(TEMP_DIR . SETTINGS_FILE, json_encode($settings));
 }
 
 /**
  * Function returning download directory from settings
  * @return string download directory
  */
-function getDownloadDirectory() {
-    $settings = json_decode(file_get_contents(TEMP_DIR . SETTINGS_FILE), true);
+function getDownloadDirectory()
+{
+    $settings = getSettings();
 
     return $settings['downloadDirectory'] . '/';
 }
@@ -119,38 +161,32 @@ function getDownloadDirectory() {
  */
 function createFTPConnection()
 {
-    if (file_exists(TEMP_DIR . SETTINGS_FILE)) {
-        $settings = json_decode(file_get_contents(TEMP_DIR . SETTINGS_FILE), true);
-
-        if (empty($settings['seedbox']) || empty($settings['seedbox']['host']) || empty($settings['seedbox']['username'])
-            || empty($settings['seedbox']['password'])
-        ) {
-            addLog('ERROR', 'No setting file found.', 'ftp');
-            return false;
-        } else {
-            // Connect to seedbox with SSL
-            $ftp = ftp_ssl_connect($settings['seedbox']['host'], intval($settings['seedbox']['port']));
-            if (!$ftp) {
-                addLog('ERROR', 'Wrong FTP host.', 'ftp');
-                return false;
-            }
-            // Log with information set on settings screen
-            if (!ftp_login($ftp, $settings['seedbox']['username'], $settings['seedbox']['password'])) {
-                addLog('ERROR', 'Wrong FTP login or password.', 'ftp');
-                return false;
-            };
-
-            // Enter on passive mode
-            if (ftp_pasv($ftp, true)) {
-                return $ftp;
-            } else {
-                addLog('ERROR', 'Unable to switch to passive mode.', 'ftp');
-                return false;
-            }
-        }
-    } else {
-        addLog('ERROR', 'No setting file found to create ftp connection.', 'ftp');
+    $settings = getSettings();
+    if (empty($settings['seedbox']) || empty($settings['seedbox']['host']) || empty($settings['seedbox']['username'])
+        || empty($settings['seedbox']['password'])
+    ) {
+        addLog('ERROR', 'No setting file found.', 'ftp');
         return false;
+    } else {
+        // Connect to seedbox with SSL
+        $ftp = ftp_ssl_connect($settings['seedbox']['host'], intval($settings['seedbox']['port']));
+        if (!$ftp) {
+            addLog('ERROR', 'Wrong FTP host.', 'ftp');
+            return false;
+        }
+        // Log with information set on settings screen
+        if (!ftp_login($ftp, $settings['seedbox']['username'], $settings['seedbox']['password'])) {
+            addLog('ERROR', 'Wrong FTP login or password.', 'ftp');
+            return false;
+        };
+
+        // Enter on passive mode
+        if (ftp_pasv($ftp, true)) {
+            return $ftp;
+        } else {
+            addLog('ERROR', 'Unable to switch to passive mode.', 'ftp');
+            return false;
+        }
     }
 }
 
@@ -192,52 +228,46 @@ function sendCompleteMail($parameters)
  */
 function sendMail($text, $subject)
 {
-    if (file_exists(TEMP_DIR . SETTINGS_FILE)) {
-        $settings = json_decode(file_get_contents(TEMP_DIR . SETTINGS_FILE), true);
-
-        if (empty($settings['mailing']) || empty($settings['mailing']['smtpHost']) ||
-            empty($settings['mailing']['username']) || empty($settings['mailing']['password'])
-        ) {
-            addLog('WARNING', 'Mailing configuration is not set', 'mailing');
-            return false;
-        } else {
-            $mail = new PHPMailer(true);
-
-            $mail->isSMTP();
-            $mail->Host = $settings['mailing']['smtpHost'];
-            $mail->SMTPAuth = true;
-            $mail->Username = $settings['mailing']['username'];
-            $mail->Password = $settings['mailing']['password'];
-            $mail->SMTPSecure = 'tls';
-
-            $mail->From = $settings['mailing']['username'];
-            $mail->FromName = $settings['mailing']['username'];
-            $mail->addAddress($settings['mailing']['recipient'], $settings['mailing']['recipient']);
-            $mail->addReplyTo($settings['mailing']['username'], 'No-Reply');
-            $mail->isHTML(true);
-
-            $mail->Subject = $subject;
-            $mail->Body = $text;
-
-            try {
-                if (!$mail->send()) {
-                    addLog('ERROR', 'Unable to send mail.', 'mailing');
-                    return false;
-                } else {
-                    addLog('SUCCESS', 'Mail has been sent', 'mailing');
-                    return true;
-                }
-            } catch (phpmailerException $e) {
-                addLog('ERROR', 'Unable to send mail. Details : ' . $e->getMessage(), 'mailing');
-                return false;
-            } catch (Exception $e) {
-                addLog('ERROR', 'Unable to send mail. Details : ' . $e->getMessage(), 'mailing');
-                return false;
-            }
-        }
-    } else {
+    $settings = getSettings();
+    if (empty($settings['mailing']) || empty($settings['mailing']['smtpHost']) ||
+        empty($settings['mailing']['username']) || empty($settings['mailing']['password'])
+    ) {
         addLog('WARNING', 'Mailing configuration is not set', 'mailing');
         return false;
+    } else {
+        $mail = new PHPMailer(true);
+
+        $mail->isSMTP();
+        $mail->Host = $settings['mailing']['smtpHost'];
+        $mail->SMTPAuth = true;
+        $mail->Username = $settings['mailing']['username'];
+        $mail->Password = $settings['mailing']['password'];
+        $mail->SMTPSecure = 'tls';
+
+        $mail->From = $settings['mailing']['username'];
+        $mail->FromName = $settings['mailing']['username'];
+        $mail->addAddress($settings['mailing']['recipient'], $settings['mailing']['recipient']);
+        $mail->addReplyTo($settings['mailing']['username'], 'No-Reply');
+        $mail->isHTML(true);
+
+        $mail->Subject = $subject;
+        $mail->Body = $text;
+
+        try {
+            if (!$mail->send()) {
+                addLog('ERROR', 'Unable to send mail.', 'mailing');
+                return false;
+            } else {
+                addLog('SUCCESS', 'Mail has been sent', 'mailing');
+                return true;
+            }
+        } catch (phpmailerException $e) {
+            addLog('ERROR', 'Unable to send mail. Details : ' . $e->getMessage(), 'mailing');
+            return false;
+        } catch (Exception $e) {
+            addLog('ERROR', 'Unable to send mail. Details : ' . $e->getMessage(), 'mailing');
+            return false;
+        }
     }
 }
 

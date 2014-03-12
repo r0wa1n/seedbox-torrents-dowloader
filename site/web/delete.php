@@ -25,7 +25,7 @@ function deleteFile($ftp, $file, $dir = '')
 $file = $_POST['file'];
 if (!empty($file)) {
     $decodedFile = urldecode($file);
-    $filesDetails = json_decode(file_get_contents(TEMP_DIR . SEEDBOX_DETAILS_FILE), true);
+    $filesDetails = getSeedboxDetails();
     $ftp = createFTPConnection();
     if ($ftp) {
         $pathFile = explode('/', $decodedFile);

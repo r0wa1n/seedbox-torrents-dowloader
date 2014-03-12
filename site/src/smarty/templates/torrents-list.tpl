@@ -25,7 +25,7 @@
                 <button type="button" class="download btn btn-small btn-success btn-xs visible-xs"><span class="glyphicon glyphicon-save"></span></button>
             {/if}
         </td>
-        <td style="line-height: 34px;text-align: center;">
+        <td>
             <button type="button" class="delete btn btn-small btn-danger hidden-xs"><span class="glyphicon glyphicon-remove"></span></button>
             <button type="button" class="delete btn btn-small btn-danger btn-xs visible-xs"><span class="glyphicon glyphicon-remove"></span></button>
         </td>

@@ -11,7 +11,7 @@ if (isset($argv)) {
     } else {
         $decodedFile = urldecode($file);
 
-        $filesDetails = json_decode(file_get_contents(TEMP_DIR . SEEDBOX_DETAILS_FILE), true);
+        $filesDetails = getSeedboxDetails();
         $begin = round(microtime(true));
 
         $pathFile = explode('/', $decodedFile);

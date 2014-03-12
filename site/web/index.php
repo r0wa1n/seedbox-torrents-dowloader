@@ -6,7 +6,7 @@ require_once('../src/utils.php');
 $smarty = new Smarty();
 initSmarty($smarty, 'HOME');
 
-$filesDetails = json_decode(file_get_contents(TEMP_DIR . SEEDBOX_DETAILS_FILE), true);
+$filesDetails = getSeedboxDetails();
 $torrents = computeChildren($filesDetails, getDownloadDirectory());
 
 $smarty->assign('torrents', $torrents);
