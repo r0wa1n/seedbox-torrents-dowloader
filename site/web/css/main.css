@@ -68,6 +68,9 @@ div#loading img {
     margin: 0 auto;
 }
 td { vertical-align: inherit !important; }
+td.loading {
+    background: url(../img/mini-loading.gif) no-repeat right 5px center;
+}
 @media screen and (max-width: 980px) {
     body { padding-top: 0; }
 }

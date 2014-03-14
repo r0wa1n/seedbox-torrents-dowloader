@@ -101,6 +101,9 @@ function initTorrentChildren() {
     var directories = $('.directory');
     directories.off('click');
     directories.click(function () {
+        // Show loading
+        var mainTd = $(this);
+        mainTd.addClass('loading');
         // Remove directory class click in order to prevent second click
         var parent = $(this);
         parent.removeClass('directory');
@@ -121,6 +124,8 @@ function initTorrentChildren() {
                 level: parentTr.attr('level')
             },
             success: function (data) {
+                // Remove loading
+                mainTd.removeClass('loading');
                 parentTr.after(data);
                 initTorrentChildren();
                 // Add button event

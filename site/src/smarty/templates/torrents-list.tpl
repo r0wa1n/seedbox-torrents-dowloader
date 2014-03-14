@@ -19,7 +19,8 @@
                     <div class="progress-bar pending" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"><span class="glyphicon glyphicon-transfer">&nbsp;Pending...</span></div>
                 </div>
             {elseif {$torrent.status} eq 'DOWNLOADED'}
-                <button type="button" class="btn btn-small btn-success disabled"><span class="glyphicon glyphicon-save">&nbsp;Download</span></button>
+                <button type="button" class="btn btn-small btn-success disabled hidden-xs"><span class="glyphicon glyphicon-save">&nbsp;Download</span></button>
+                <button type="button" class="btn btn-small btn-success disabled btn-xs visible-xs"><span class="glyphicon glyphicon-save"></span></button>
             {else}
                 <button type="button" class="download btn btn-small btn-success hidden-xs"><span class="glyphicon glyphicon-save">&nbsp;Download</span></button>
                 <button type="button" class="download btn btn-small btn-success btn-xs visible-xs"><span class="glyphicon glyphicon-save"></span></button>

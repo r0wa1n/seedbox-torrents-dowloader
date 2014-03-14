@@ -238,11 +238,13 @@ function sendMail($text, $subject)
         $mail = new PHPMailer(true);
 
         $mail->isSMTP();
+        $mail->SMTPDebug = 0;  // debugging: 1 = errors and messages, 2 = messages only
         $mail->Host = $settings['mailing']['smtpHost'];
         $mail->SMTPAuth = true;
         $mail->Username = $settings['mailing']['username'];
         $mail->Password = $settings['mailing']['password'];
-        $mail->SMTPSecure = 'tls';
+        $mail->SMTPSecure = 'ssl';
+        $mail->Port = 465;
 
         $mail->From = $settings['mailing']['username'];
         $mail->FromName = $settings['mailing']['username'];
