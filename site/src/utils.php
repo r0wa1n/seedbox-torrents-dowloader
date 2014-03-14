@@ -281,7 +281,7 @@ function sendMail($text, $subject)
  */
 function getFileSize($file)
 {
-    return shell_exec('du -sk "' . $file . '" | awk \'{print$1}\'') * 1024;
+    return (float) shell_exec('du -sk "' . $file . '" | awk \'{print$1}\'') * 1024;
 }
 
 /**
@@ -293,6 +293,7 @@ function getFileSize($file)
  */
 function fileOfSize($size, $precision = 2)
 {
+    if ($size >= 1099511627776) return round(($size / 1099511627776 * 100) / 100, $precision) . ' To';
     if ($size >= 1073741824) return round(($size / 1073741824 * 100) / 100, $precision) . ' Go';
     if ($size >= 1048576) return round(($size / 1048576 * 100) / 100, $precision) . ' Mo';
     if ($size >= 1024) return round(($size / 1024 * 100) / 100, $precision) . ' Ko';
@@ -323,7 +324,7 @@ function computeChildren($children, $downloadDirectory, $dir = '')
             // status can be (DOWNLOADED, PENDING, DOWNLOADING, NONE)
             $status = 'NONE';
             $detailsStatus = array();
-            $fileSize = $fileDetail['size'];
+            $fileSize = (float) $fileDetail['size'];
             if (file_exists(TEMP_DIR . 'pending/' . $dir . $fileDetail['name'])) {
                 // File is pending, check if download is started or not
                 if (file_exists($downloadDirectory . $dir . $fileDetail['name'])) {

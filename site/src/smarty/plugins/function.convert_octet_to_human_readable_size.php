@@ -15,6 +15,7 @@ function smarty_function_convert_octet_to_human_readable_size($params, &$smarty)
         return '-';
     }
 
+    if ($size >= 1099511627776) return round(($size / 1099511627776 * 100) / 100, $precision) . ' To';
     if ($size >= 1073741824) return round(($size / 1073741824 * 100) / 100, $precision) . ' Go';
     if ($size >= 1048576) return round(($size / 1048576 * 100) / 100, $precision) . ' Mo';
     if ($size >= 1024) return round(($size / 1024 * 100) / 100, $precision) . ' Ko';
