@@ -9,32 +9,15 @@
  */
 function smarty_function_convert_octet_to_human_readable_size($params, &$smarty)
 {
-    $octets = $params['size'];
+    $size = $params['size'];
     $precision = empty($params['precision']) ? 2 : $params['precision'];
-    if (empty($octets)) {
-        return;
+    if (empty($size)) {
+        return '-';
     }
 
-    $kilooctet = 1024;
-    $megaoctet = $kilooctet * 1024;
-    $gigaoctet = $megaoctet * 1024;
-    $teraoctet = $gigaoctet * 1024;
-
-    if (($octets >= 0) && ($octets < $kilooctet)) {
-        return $octets . ' o';
-
-    } elseif (($octets >= $kilooctet) && ($octets < $megaoctet)) {
-        return round($octets / $kilooctet, $precision) . ' Ko';
-
-    } elseif (($octets >= $megaoctet) && ($octets < $gigaoctet)) {
-        return round($octets / $megaoctet, $precision) . ' Mo';
-
-    } elseif (($octets >= $gigaoctet) && ($octets < $teraoctet)) {
-        return round($octets / $gigaoctet, $precision) . ' Go';
-
-    } elseif ($octets >= $teraoctet) {
-        return round($octets / $teraoctet, $precision) . ' To';
-    } else {
-        return $octets . ' O';
-    }
+    if ($size >= 1073741824) return round(($size / 1073741824 * 100) / 100, $precision) . ' Go';
+    if ($size >= 1048576) return round(($size / 1048576 * 100) / 100, $precision) . ' Mo';
+    if ($size >= 1024) return round(($size / 1024 * 100) / 100, $precision) . ' Ko';
+    if ($size > 0) return $size . ' o';
+    return '-';
 }

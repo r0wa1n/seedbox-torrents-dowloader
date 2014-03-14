@@ -113,7 +113,8 @@ function getSettings()
     }
 }
 
-function getSeedboxDetails() {
+function getSeedboxDetails()
+{
     if (!file_exists(TEMP_DIR . SEEDBOX_DETAILS_FILE)) {
         if (touch(TEMP_DIR . SEEDBOX_DETAILS_FILE)) {
             chmod(TEMP_DIR . SEEDBOX_DETAILS_FILE, 0600);
@@ -238,7 +239,7 @@ function sendMail($text, $subject)
         $mail = new PHPMailer(true);
 
         $mail->isSMTP();
-        $mail->SMTPDebug = 0;  // debugging: 1 = errors and messages, 2 = messages only
+        $mail->SMTPDebug = 0; // debugging: 1 = errors and messages, 2 = messages only
         $mail->Host = $settings['mailing']['smtpHost'];
         $mail->SMTPAuth = true;
         $mail->Username = $settings['mailing']['username'];
@@ -286,34 +287,17 @@ function getFileSize($file)
 /**
  * Convert bytes to human readable format
  *
- * @param $octets
+ * @param $size
  * @param int $precision
  * @return string
  */
-function octetsToSize($octets, $precision = 2)
+function fileOfSize($size, $precision = 2)
 {
-    $kilooctet = 1024;
-    $megaoctet = $kilooctet * 1024;
-    $gigaoctet = $megaoctet * 1024;
-    $teraoctet = $gigaoctet * 1024;
-
-    if (($octets >= 0) && ($octets < $kilooctet)) {
-        return $octets . ' o';
-
-    } elseif (($octets >= $kilooctet) && ($octets < $megaoctet)) {
-        return round($octets / $kilooctet, $precision) . ' Ko';
-
-    } elseif (($octets >= $megaoctet) && ($octets < $gigaoctet)) {
-        return round($octets / $megaoctet, $precision) . ' Mo';
-
-    } elseif (($octets >= $gigaoctet) && ($octets < $teraoctet)) {
-        return round($octets / $gigaoctet, $precision) . ' Go';
-
-    } elseif ($octets >= $teraoctet) {
-        return round($octets / $teraoctet, $precision) . ' To';
-    } else {
-        return $octets . ' O';
-    }
+    if ($size >= 1073741824) return round(($size / 1073741824 * 100) / 100, $precision) . ' Go';
+    if ($size >= 1048576) return round(($size / 1048576 * 100) / 100, $precision) . ' Mo';
+    if ($size >= 1024) return round(($size / 1024 * 100) / 100, $precision) . ' Ko';
+    if ($size > 0) return $size . ' o';
+    return '-';
 }
 
 function searchFile($filePath, $currentPathKey, $files)

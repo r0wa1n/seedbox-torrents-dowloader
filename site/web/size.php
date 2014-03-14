@@ -22,7 +22,7 @@ if (empty($decodedFile)) {
         $size = searchSize($pathFile, 0, $filesDetails);
 
         echo json_encode(array(
-            'h' => octetsToSize($currentSize), // Human Readable size
+            'h' => fileOfSize($currentSize), // Human Readable size
             's' => $currentSize, // current size
             't' => $size // Total file size
         ));

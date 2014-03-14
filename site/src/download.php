@@ -48,7 +48,7 @@ if (isset($argv)) {
         $interval = $beginDateTime->diff($endDateTime);
         $duration = $end - $begin;
         $average = $sizeOctet / $duration;
-        $size = octetsToSize($sizeOctet);
+        $size = fileOfSize($sizeOctet);
 
         if(sendCompleteMail(array(
             'file' => $file,
@@ -56,7 +56,7 @@ if (isset($argv)) {
             'begin' => date(DATE_PATTERN, $begin),
             'end' => date(DATE_PATTERN, $end),
             'duration' => $interval->format('%Hh%Im%Ss'),
-            'average' => octetsToSize($average)
+            'average' => fileOfSize($average)
         ))) {
             addLog('SUCCESS', 'File ' . $file . ' downloaded (' . $size . ')', 'download');
         }
