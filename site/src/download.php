@@ -55,7 +55,7 @@ if (isset($argv)) {
             'size' => $size,
             'begin' => date(DATE_PATTERN, $begin),
             'end' => date(DATE_PATTERN, $end),
-            'duration' => ($interval->h < 10 ? ('0' . $interval->h) : $interval->h) . 'h' . ($interval->m < 10 ? ('0' . $interval->m) : $interval->m) . 'm' . ($interval->s < 10 ? ('0' . $interval->s) : $interval->s) . 's',
+            'duration' => $interval->format('%Hh%Im%Ss'),
             'average' => octetsToSize($average)
         ))) {
             addLog('SUCCESS', 'File ' . $file . ' downloaded (' . $size . ')', 'download');
