@@ -58,7 +58,7 @@
                     <tr>
                         <td>Disk info</td>
                         <td>
-                            <div class="progress progress-striped" id="progress-disk-size">
+                            <div class="progress progress-striped" id="progress-disk-size" title="{convert_octet_to_human_readable_size size={$header.diskInfo.totalSizeLeft}} left">
                                 <div class="progress-bar progress-bar-{$header.diskInfo.progressClass}" role="progressbar"
                                      aria-valuenow="${$header.diskInfo.totalSizeUsed}" aria-valuemin="0"
                                      aria-valuemax="${$header.diskInfo.totalSize}"
