@@ -309,8 +309,9 @@ function initTableSorter() {
  */
 function updateDownloadedFiles() {
     // Check all current downloading files
-    $('.downloading').each(function () {
+    $('.downloading:not(.in-progress)').each(function () {
         var progressBar = $(this);
+        progressBar.addClass('in-progress');
         $.ajax({
             type: 'GET',
             url: 'size.php',
@@ -326,13 +327,15 @@ function updateDownloadedFiles() {
                         progressBar.css('width', percent + '%');
                         progressBar.find('span').html('&nbsp;' + data.h);
                     }
+                    progressBar.removeClass('in-progress');
                 }
             }
         });
     });
     // Check all pending files
-    $('.pending').each(function () {
+    $('.pending:not(.in-progress)').each(function () {
         var progressBar = $(this);
+        progressBar.addClass('in-progress');
         $.ajax({
             type: 'GET',
             url: 'size.php',
@@ -345,6 +348,7 @@ function updateDownloadedFiles() {
                         toDownloading(progressBar, data);
                     }
                 }
+                progressBar.removeClass('in-progress');
             }
         });
     });

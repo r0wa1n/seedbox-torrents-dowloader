@@ -142,7 +142,7 @@ function getSeedboxDetails()
 function initDownloadDirectory()
 {
     $settings = getSettings();
-    $settings['downloadDirectory'] = realpath(getcwd() . '/../src/') . '/download';
+    $settings['downloadDirectory'] = realpath(getcwd() . '/../') . '/download';
     file_put_contents(TEMP_DIR . SETTINGS_FILE, json_encode($settings));
 }
 
