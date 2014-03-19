@@ -1,7 +1,7 @@
 <project name="seedbox-torrents-downloader" default="help" basedir=".">
 
     <!-- read variables from property file and environment -->
-    <property file="build.properties" />
+    <property file="build.properties"/>
 
     <property name="externallibs.dir.name" value="external-libs"/>
     <property name="smarty.file.name" value="Smarty-${smarty.version}.tar.gz"/>
@@ -12,34 +12,56 @@
     <property name="site" location="${basedir}/site"/>
     <property name="src" location="${site}/src"/>
     <property name="vendor" location="${site}/vendor"/>
+    <property name="version.file.name" location="${site}/web/version.txt"/>
 
     <target name="help">
-        <echo message="Ant build file help. Available targets :" />
-        <echo message="    ant clean           : clean the project, remove everyting that can be generated with the previous targets." />
-        <echo message="    ant init            : initialize the project, download smarty, create necessary directories with right permissions." />
+        <echo message="Ant build file help. Available targets :"/>
+        <echo message="    ant clean           : clean the project, remove everyting that can be generated with the previous targets."/>
+        <echo message="    ant init            : initialize the project, download smarty, create necessary directories with right permissions."/>
+    </target>
+
+    <available file=".git" type="dir" property="git.present"/>
+    <target name="git.revision" description="Store git revision in ${repository.version}" if="git.present">
+        <exec executable="git" outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
+            <arg value="rev-parse"/>
+            <arg value="HEAD"/>
+        </exec>
+        <condition property="repository.version" value="${git.revision}" else="unknown">
+            <and>
+                <isset property="git.revision"/>
+                <length string="${git.revision}" trim="yes" length="0" when="greater"/>
+            </and>
+        </condition>
+    </target>
+
+    <target name="version" depends="git.revision">
+        <propertyfile file="${version.file.name}" comment="Version file">
+            <entry key="latest.git.revision.hash" type="string" value="${git.revision}"/>
+        </propertyfile>
     </target>
 
     <target name="clean">
-        <delete dir="${build}" />
-        <delete dir="${vendor}" />
-        <delete dir="${src}/smarty/templates_c" />
-        <delete dir="${src}/smarty/cache" />
-        <delete dir="${site}/temp" />
-        <delete dir="${site}/download" />
-        <delete dir="${site}/logs" />
+        <delete dir="${build}"/>
+        <delete dir="${vendor}"/>
+        <delete dir="${src}/smarty/templates_c"/>
+        <delete dir="${src}/smarty/cache"/>
+        <delete dir="${site}/temp"/>
+        <delete dir="${site}/download"/>
+        <delete dir="${site}/logs"/>
+        <delete file="${version.file.name}"/>
     </target>
 
     <target name="download.smarty" description="Download the smarty utility">
-        <mkdir dir="${build}" />
+        <mkdir dir="${build}"/>
         <exec executable="bash">
-            <arg value="-c" />
-            <arg value="curl -s http://www.smarty.net/files/${smarty.file.name} -o ${build}/${smarty.file.name}" />
+            <arg value="-c"/>
+            <arg value="curl -s http://www.smarty.net/files/${smarty.file.name} -o ${build}/${smarty.file.name}"/>
         </exec>
     </target>
 
-    <target name="init">
-        <mkdir dir="${vendor}" />
-        <mkdir dir="${build}" />
+    <target name="init" depends="version">
+        <mkdir dir="${vendor}"/>
+        <mkdir dir="${build}"/>
 
         <untar src="${externallibs.dir.name}/${smarty.file.name}" dest="${build}" compression="gzip"/>
         <copy todir="${vendor}/Smarty">
@@ -47,21 +69,22 @@
         </copy>
 
         <unzip src="${externallibs.dir.name}/${phpmailer.file.name}" dest="${build}"/>
-        <mkdir dir="${vendor}/${phpmailer.dir.name}" />
-        <copy file="${build}/${phpmailer.dir.name}-master/PHPMailerAutoload.php" todir="${vendor}/${phpmailer.dir.name}" />
-        <copy file="${build}/${phpmailer.dir.name}-master/class.phpmailer.php" todir="${vendor}/${phpmailer.dir.name}" />
-        <copy file="${build}/${phpmailer.dir.name}-master/class.pop3.php" todir="${vendor}/${phpmailer.dir.name}" />
-        <copy file="${build}/${phpmailer.dir.name}-master/class.smtp.php" todir="${vendor}/${phpmailer.dir.name}" />
+        <mkdir dir="${vendor}/${phpmailer.dir.name}"/>
+        <copy file="${build}/${phpmailer.dir.name}-master/PHPMailerAutoload.php"
+              todir="${vendor}/${phpmailer.dir.name}"/>
+        <copy file="${build}/${phpmailer.dir.name}-master/class.phpmailer.php" todir="${vendor}/${phpmailer.dir.name}"/>
+        <copy file="${build}/${phpmailer.dir.name}-master/class.pop3.php" todir="${vendor}/${phpmailer.dir.name}"/>
+        <copy file="${build}/${phpmailer.dir.name}-master/class.smtp.php" todir="${vendor}/${phpmailer.dir.name}"/>
 
-        <mkdir dir="${src}/smarty/templates_c" />
-        <mkdir dir="${src}/smarty/cache" />
+        <mkdir dir="${src}/smarty/templates_c"/>
+        <mkdir dir="${src}/smarty/cache"/>
 
         <chmod dir="${src}/smarty/templates_c" perm="o+w" type="dir"/>
         <chmod dir="${src}/smarty/cache" perm="o+w" type="dir"/>
 
-        <mkdir dir="${site}/temp" />
-        <mkdir dir="${site}/download" />
-        <mkdir dir="${site}/logs" />
+        <mkdir dir="${site}/temp"/>
+        <mkdir dir="${site}/download"/>
+        <mkdir dir="${site}/logs"/>
 
         <chmod dir="${site}/temp" perm="o+w" type="dir"/>
         <chmod dir="${site}/download" perm="o+w" type="dir"/>
