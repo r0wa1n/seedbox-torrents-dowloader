@@ -20,7 +20,7 @@ function initArray($filesRawList, $count)
 
         $items[$item['name']] = array(
             'name' => $item['name'],
-            'size' => $size,
+            'size' => strval($size),
             'type' => $item['type'],
             'children' => $children,
             'date' => $item['day'] . ' ' . $item['month'] . ' ' . $item['time']
@@ -98,7 +98,7 @@ function getSize($filesRawList, $file)
 {
     if (in_array('./' . $file . ':', $filesRawList)) {
         $index = array_search('./' . $file . ':', $filesRawList);
-        $size = 0;
+        (float) $size = 0;
 
         if (!empty($filesRawList[$index + 2])) {
             $f = $filesRawList[$index + 2];
@@ -109,7 +109,7 @@ function getSize($filesRawList, $file)
                     $s = getSize($filesRawList, $file . '/' . $item['name']);
                     $size += $s;
                 } else {
-                    $size += intval($item['size']);
+                    $size += floatval($item['size']);
                 }
                 $offset++;
                 $f = $filesRawList[$index + $offset];

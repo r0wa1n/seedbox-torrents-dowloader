@@ -1,10 +1,10 @@
 <?php
-$file = $_GET['file'];
-$file = urldecode($file);
+require_once('../src/constants.php');
+require_once('../src/utils.php');
 
-include('../src/constants.php');
-include('../src/utils.php');
+$file = $_GET['file'];
 $decodedFile = urldecode($file);
+
 // 4 cases :
 //  - File/Dir can be downloaded
 //  - File/Dir is already downloaded
