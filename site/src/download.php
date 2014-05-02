@@ -1,7 +1,6 @@
 <?php
 require_once('../src/constants.php');
 require_once('../src/utils.php');
-require_once('datetime52.class.php');
 
 if (isset($argv)) {
     $file = $argv[1];
@@ -42,21 +41,26 @@ if (isset($argv)) {
         $end = round(microtime(true));
 
         $sizeOctet = $fileDetails['size'];
-        $beginDateTime = new DateTime_52();
-        $beginDateTime->setTimestamp($begin);
-        $endDateTime = new DateTime_52();
-        $endDateTime->setTimestamp($end);
-        $interval = $beginDateTime->diff($endDateTime);
-        $duration = $end - $begin;
-        $average = $sizeOctet / $duration;
+
+        $diff = $end - $begin;
+        if (1 > $diff) {
+            exit('Target Event Already Passed (or is passing this very instant)');
+        } else {
+            $h = $diff / 3600 % 24;
+            $m = $diff / 60 % 60;
+            $s = $diff % 60;
+
+            $duration = $h . 'h' . $m . 'm' . $s . 's';
+        }
+        $average = $sizeOctet / $diff;
         $size = fileOfSize($sizeOctet);
 
-        if(sendCompleteMail(array(
+        if (sendCompleteMail(array(
             'file' => $file,
             'size' => $size,
             'begin' => date(DATE_PATTERN, $begin),
             'end' => date(DATE_PATTERN, $end),
-            'duration' => $interval->format('%Hh%Im%Ss'),
+            'duration' => $duration,
             'average' => fileOfSize($average)
         ))) {
             addLog('SUCCESS', 'File ' . $file . ' downloaded (' . $size . ')', 'download');
