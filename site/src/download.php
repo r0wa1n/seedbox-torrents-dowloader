@@ -1,6 +1,7 @@
 <?php
 require_once('../src/constants.php');
 require_once('../src/utils.php');
+require_once('datetime52.class.php');
 
 if (isset($argv)) {
     $file = $argv[1];
@@ -41,9 +42,9 @@ if (isset($argv)) {
         $end = round(microtime(true));
 
         $sizeOctet = $fileDetails['size'];
-        $beginDateTime = new DateTime();
+        $beginDateTime = new DateTime_52();
         $beginDateTime->setTimestamp($begin);
-        $endDateTime = new DateTime();
+        $endDateTime = new DateTime_52();
         $endDateTime->setTimestamp($end);
         $interval = $beginDateTime->diff($endDateTime);
         $duration = $end - $begin;
